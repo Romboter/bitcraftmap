@@ -61,38 +61,6 @@ def generate_ruined_json(json_key):
         '3': json_key['name']
     }
 
-def generate_claims_json(json_key):
-    return {
-        '1': json_key['locationX'] / 23040 * 7676,
-        '2': json_key['locationZ'] / 23040 * 7676,
-        '3': json_key['name'],
-        '4': json_key['tier'],
-        '5': json_key['entityId'],
-        '6': json_key['numTiles'],
-        '7': json_key['supplies']
-    }
-
-### Data from claims.json
-with open('assets/data/claims.json', 'r', encoding='utf-8') as file:
-    data = json.load(file)
-
-claims_json = [generate_claims_json(key) for key in data]
-
-with open('assets/markers/claims.msgpack', 'wb') as file:
-    packed_claims = msgpack.packb(claims_json)
-    file.write(packed_claims)
-
-
-
-
-
-
-
-
-
-
-
-
 
 '''
 with open('assets/markers/claims.msgpack', 'wb') as file:

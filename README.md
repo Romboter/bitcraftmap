@@ -21,6 +21,11 @@ https://bitcraftmap.com
 - https://leafletjs.com/plugins.html#layer-switching-controls
 - https://github.com/stefanocudini/leaflet-search/tree/master / https://opengeo.tech/maps/leaflet-search/
 
+## Roadmap
+
+1 Finish the better coordinates system and clean up script
+2 Finish the geojson sharing feature and releast
+
 ## Wild ideas board
 
 - Lazy loading of data
@@ -71,3 +76,47 @@ https://bitcraftmap.com
 - https://pasq.fr/flatgeobuf-soyons-binaire
 - https://flatgeobuf.org/examples/leaflet/
 - https://github.com/mapbox/geobuf
+
+
+## List of possible filters
+- Global filter
+    - Filter by region
+    - Filter by biome
+- Claims
+    - Filter by tier
+    - Filter / Search by name
+
+- Filter per profession
+    - Foraging
+    - Hunting
+    - Mining
+    - Forestry
+    - Fishing
+
+- Resources
+    - Filter by tier
+
+- Caves
+    - Filter by tier
+    - Filter by size
+
+## Ui design
+- Menu
+    - Colapse
+    - Move around
+    - Pin to current position
+    - Load settings
+    - Save settings
+    - Share settings
+
+- Later
+    - Resource Finder in range [circle or draw a shape]
+
+## Some inspiration
+
+- https://www.newworld-map.com/
+- https://interactive-game-maps.github.io/
+- https://stackoverflow.com/questions/12262163/what-are-leaflet-and-mapbox-and-what-are-their-differences
+- (ablion map) view-source:https://albiononline2d.com/public/js/map.js https://albiononline2d.com/en/map/2202
+
+
