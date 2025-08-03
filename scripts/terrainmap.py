@@ -1,45 +1,43 @@
 from PIL import Image, ImageOps
 import numpy as np
-import math
-import cv2
+# import math
+# import cv2
 
 width = height = 2400
-pixel_size = 8  # 8 bytes per pixel (only 3 are useful: RGB)
+pixel_size = 8 
 
-# Load binary data
 with open("TerrainMap.uncompressed", "rb") as f:
     data = f.read()
 
-# Sanity check
 expected_size = width * height * pixel_size
 if len(data) < expected_size:
     raise ValueError("File too small for expected image size.")
 elif len(data) > expected_size:
     data = data[:expected_size]  # Trim padding if any
 
-# Extract RGB values from each 8-byte chunk
 rgb_data = bytearray()
 for i in range(0, len(data), pixel_size):
-    # Bytes 1, 2, 3 (index 1, 2, 3) are R, G, B
     b, g, r = data[i+1], data[i+2], data[i+3]
-    rgb_data.extend([r, g, b])  # Convert to RGB order
+    rgb_data.extend([r, g, b]) 
 
-# Convert to NumPy array and reshape
 img_array = np.frombuffer(rgb_data, dtype=np.uint8).reshape((height, width, 3))
 
-# Create and save image
+# crop_factor = 1.1547005 # magic number
+# crop_pixels = int(height / crop_factor)
+# img_array = img_array[:crop_pixels, :]
+
 img = Image.fromarray(img_array, 'RGB')
 img = ImageOps.mirror(img)
 img = img.rotate(180)
 
-# scale_factor = 10
-# img = img.resize((width * scale_factor, height * scale_factor), resample=Image.NEAREST)
+scale_factor = 3
+img = img.resize((2400 * scale_factor, 2400 * scale_factor), resample=Image.NEAREST)
 
-img.save("reconstructed_rgb_image.png")
+img.save("reconstructed_bgr_image.png")
 img.show()
 
 
-
+'''
 image_path = "reconstructed_rgb_image.png"        # Your input image file
 output_path = "reconstructed_rgb_image_hex.png"  # Output file
 hex_size = 20                   # Radius of hexagons
@@ -88,3 +86,4 @@ for y in np.arange(0, h + dy, dy):
 
 # Save the output image
 cv2.imwrite(output_path, result)
+'''

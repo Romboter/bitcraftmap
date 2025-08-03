@@ -70,7 +70,7 @@
           shadowSize: null,
           shadowAnchor: null
         });
-      }
+      };
  
       const caveIcons = [
         createMapIcon('assets/icons/FerralithOreChunk.webp'),
@@ -107,10 +107,9 @@
         'Ferralith','Pyrelite','Emarium','Elenvar','Luminite',
         'Rathium','Aurumite','Celestium','Umbracite','Astralite'
       ];
-
+      const caveSize = ['Small','Large'];
 
       // For later
-      const caveSize = ['Small','Large'];
       const poiLayers = ["ruinedCities", "playerClaims","empireTowers", "temples", "wonders", "caves"];
       const resourcesLayers = ["wildAnimals", "monsters","hieroglyphs", "fibers", "trees", "ores", "sand", "stone", "clay", "berry", "flower", "mushroom", "fishBait", "fishLake", "fishOcean"];
       const miscLayers = ["jakylsDens", "travelersFruits","wildFoods", "sticks", "flint"];
@@ -119,6 +118,10 @@
       const treesLayer = L.layerGroup();
       const ruinedLayer = L.layerGroup();
       const templesLayer = L.layerGroup();
+
+      const bankLayer = L.layerGroup();
+      const marketLayer = L.layerGroup();
+      const waystoneLayer = L.layerGroup();
 
       const caveT1Layer = L.layerGroup();
       const caveT2Layer = L.layerGroup();
@@ -130,10 +133,6 @@
       const caveT8Layer = L.layerGroup();
       const caveT9Layer = L.layerGroup();
       const caveT10Layer = L.layerGroup();
-
-      const bankLayer = L.layerGroup();
-      const marketLayer = L.layerGroup();
-      const waystoneLayer = L.layerGroup();
 
       const claimT0Layer = L.layerGroup();
       const claimT1Layer = L.layerGroup();
