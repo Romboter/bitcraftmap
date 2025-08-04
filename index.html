@@ -59,8 +59,8 @@
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
-        minZoom: -10,
-        maxZoom: 10,
+        minZoom: -3,
+        maxZoom: 5,
         zoomSnap: 0.1,
         attributionControl: false, // Remove watermark
         zoomControl: false, // Remove the zoom control top left
@@ -71,7 +71,7 @@
       // When placing a marker on the map we will use this 0-23040 system
       // The extra 1.15 we added doesnt mater, nothing will be placed there
       const mapBounds = [[0, 0], [bitcraftHeight, bitcraftWidth]];
-      L.imageOverlay('assets/maps/map_final.png', mapBounds).addTo(map);
+      L.imageOverlay('assets/maps/map.png', mapBounds).addTo(map);
 
       //               N                     E
       //              lat                   lgt
@@ -96,8 +96,6 @@
           shadowAnchor: null
         });
       };
-
-
 
       const caveIcons = [
         createMapIcon('assets/icons/FerralithOreChunk.webp'),
@@ -251,7 +249,7 @@
 
 
       async function loadTreesGeoJson() {
-        const file = await fetch('assets/markers/real_trees.geojson');
+        const file = await fetch('assets/markers/trees.geojson');
         const geojsonData = await file.json();
         L.geoJSON(geojsonData, {
           pointToLayer: function(feature, latlng) {
@@ -272,7 +270,7 @@
       };
 
       async function loadTemplesGeoJson() {
-        const file = await fetch('assets/markers/real_temples.geojson');
+        const file = await fetch('assets/markers/temples.geojson');
         const geojsonData = await file.json();
         L.geoJSON(geojsonData, {
           pointToLayer: function(feature, latlng) {
@@ -293,7 +291,7 @@
       };
 
       async function loadRuinedGeoJson() {
-        const file = await fetch('assets/markers/real_ruined.geojson');
+        const file = await fetch('assets/markers/ruined.geojson');
         const geojsonData = await file.json();
         L.geoJSON(geojsonData, {
           pointToLayer: function(feature, latlng) {
@@ -314,7 +312,7 @@
       };
 
       async function loadClaimsGeoJson() {
-        const file = await fetch('assets/markers/real_claims.geojson');
+        const file = await fetch('assets/markers/claims.geojson');
         const geojsonData = await file.json();
         L.geoJSON(geojsonData, {
           pointToLayer: function(feature, latlng) {
@@ -355,7 +353,7 @@
       };
 
       async function loadCavesGeoJson() {
-        const file = await fetch('assets/markers/real_caves.geojson');
+        const file = await fetch('assets/markers/caves.geojson');
         const geojsonData = await file.json();
         L.geoJSON(geojsonData, {
           pointToLayer: function(feature, latlng) {

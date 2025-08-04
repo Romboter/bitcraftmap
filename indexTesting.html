@@ -383,21 +383,6 @@
         coordDisplay.innerText = `N : ${coordN}, E: ${coordE}`;
       });
 
-      /* 
-      map.on('click', function(e) {
-        const latlng = e.latlng;
-
-        const marker = L.marker([latlng.lat, latlng.lng])
-          .addTo(map)
-          .bindPopup(`Marker at ${latlng.lat.toFixed(0)}, ${latlng.lng.toFixed(0)}`);
-
-        marker.on('contextmenu', function() {
-          map.removeLayer(marker);
-        });
-      });
-      */
-
-      // Sometimes github pages doesn't update the page ? 
       function loadGeoJsonFromUrl() {
         try {
 
