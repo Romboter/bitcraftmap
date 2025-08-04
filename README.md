@@ -24,7 +24,8 @@ https://bitcraftmap.com
 ## Roadmap
 
 1 Finish the better coordinates system and clean up script
-2 Finish the geojson sharing feature and releast
+2 Finish the geojson sharing feature and release
+3 make the higher resolution hexagon map with opencv and numpy (should be easy and high value)
 
 ## Wild ideas board
 
