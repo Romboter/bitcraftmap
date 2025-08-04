@@ -130,12 +130,6 @@
       const templeIcon = createMapIcon('assets/icons/temple.svg');
       const treeIcon = createMapIcon('assets/icons/tree.svg');
 
-      const oreTier = [
-        'Ferralith','Pyrelite','Emarium','Elenvar','Luminite',
-        'Rathium','Aurumite','Celestium','Umbracite','Astralite'
-      ];
-      const caveSize = ['Small','Large'];
-
       const treesLayer = L.layerGroup();
       const ruinedLayer = L.layerGroup();
       const templesLayer = L.layerGroup();
@@ -156,10 +150,12 @@
       const claimT9Layer = L.layerGroup();
       const claimT10Layer = L.layerGroup();
 
-      const allClaims = L.layerGroup([
-        claimT0Layer,claimT1Layer,claimT2Layer,claimT3Layer,claimT4Layer,claimT5Layer,
-        claimT6Layer,claimT7Layer,claimT8Layer, claimT9Layer,claimT10Layer
-      ]);
+      const claimLayers = [
+        claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
+        claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer
+      ];
+
+      const allClaims = L.layerGroup(claimLayers);
 
       const caveT1Layer = L.layerGroup();
       const caveT2Layer = L.layerGroup();
@@ -172,10 +168,12 @@
       const caveT9Layer = L.layerGroup();
       const caveT10Layer = L.layerGroup();
 
-      const allCaves = L.layerGroup([
-        caveT1Layer,caveT2Layer,caveT3Layer,caveT4Layer,caveT5Layer,
-        caveT6Layer,caveT7Layer,caveT8Layer,caveT9Layer,caveT10Layer
-      ]);
+      const caveLayers = [
+        caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
+        caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
+      ];
+
+      const allCaves = L.layerGroup(caveLayers);
 
       const genericToggle = {
         "Wonders": treesLayer,
@@ -239,7 +237,7 @@
         initial: false,
         marker: false,
         firstTipSubmit: true,
-        zoom: 2
+        zoom: 1
       });
 
       map.addControl(controlSearch);
@@ -255,34 +253,128 @@
       async function loadTreesGeoJson() {
         const file = await fetch('assets/markers/real_trees.geojson');
         const geojsonData = await file.json();
-        L.geoJSON(geojsonData).addTo(map);
+        L.geoJSON(geojsonData, {
+          pointToLayer: function(feature, latlng) {
+            
+            const coords = readableCoordinates(latlng);
+            const name = feature.properties.name + '</br>';
+            const loc = 'N '+ coords[0] + ' E ' + coords[1];
+            const popupText = name + loc;
+
+            return L.marker(
+              latlng,
+              { icon: treeIcon }
+            )
+            .bindPopup(popupText)
+            .addTo(treesLayer);
+          }
+        });
       };
+
       async function loadTemplesGeoJson() {
         const file = await fetch('assets/markers/real_temples.geojson');
         const geojsonData = await file.json();
-        L.geoJSON(geojsonData).addTo(map);
+        L.geoJSON(geojsonData, {
+          pointToLayer: function(feature, latlng) {
+
+            const coords = readableCoordinates(latlng);
+            const name = feature.properties.name + '</br>';
+            const loc = 'N '+ coords[0] + ' E ' + coords[1];
+            const popupText = name + loc;
+
+            return L.marker(
+              latlng,
+              { icon: templeIcon }
+            )
+            .bindPopup(popupText)
+            .addTo(templesLayer);
+          }
+        });
       };
+
       async function loadRuinedGeoJson() {
         const file = await fetch('assets/markers/real_ruined.geojson');
         const geojsonData = await file.json();
-        L.geoJSON(geojsonData).addTo(map);
+        L.geoJSON(geojsonData, {
+          pointToLayer: function(feature, latlng) {
+
+            const coords = readableCoordinates(latlng);
+            const name = feature.properties.name + '</br>';
+            const loc = 'N '+ coords[0] + ' E ' + coords[1];
+            const popupText = name + loc;
+
+            return L.marker(
+              latlng,
+              { icon: ruinedIcon }
+            )
+            .bindPopup(popupText)
+            .addTo(ruinedLayer);
+          }
+        });
       };
+
       async function loadClaimsGeoJson() {
         const file = await fetch('assets/markers/real_claims.geojson');
         const geojsonData = await file.json();
-        L.geoJSON(geojsonData).addTo(map);
+        L.geoJSON(geojsonData, {
+          pointToLayer: function(feature, latlng) {
+
+          const coords = readableCoordinates(latlng);
+          const name = '<a href="' + 'https://bitjita.com/claims/' + feature.properties.entityId + '" target="_blank">' + feature.properties.name + '</a>';
+          const tier = ' (T' + feature.properties.tier + ')' + '</br>';
+          const loc = 'N '+ coords[0] + ' E ' + coords[1] + '</br>';
+          const has_bank = 'Bank : ' + (feature.properties.has_bank ? 'Yes' : 'No') + '</br>';
+          const has_market = 'Market : ' + (feature.properties.has_market ? 'Yes' : 'No') + '</br>';
+          const has_Waystone = 'Waystone : ' + (feature.properties.has_waystone ? 'Yes' : 'No');
+          const popupText = name + tier + loc + has_bank + has_market + has_Waystone;
+
+            const marker = L.marker(
+              latlng,
+              {
+                title: feature.properties.name,
+                icon: claimIcons[feature.properties.tier]
+              }
+            );
+
+            marker.bindPopup(popupText)
+            marker.addTo(claimLayers[feature.properties.tier]);
+
+            if (feature.properties.has_bank) {
+              marker.addTo(banksLayer)
+            }
+            if (feature.properties.has_market) {
+              marker.addTo(marketsLayer)
+            }
+            if (feature.properties.has_waystone) {
+              marker.addTo(waystonesLayer)
+            }
+
+            return marker;
+          }
+        });
       };
+
       async function loadCavesGeoJson() {
         const file = await fetch('assets/markers/real_caves.geojson');
         const geojsonData = await file.json();
-        L.geoJSON(geojsonData).addTo(map);
+        L.geoJSON(geojsonData, {
+          pointToLayer: function(feature, latlng) {
+
+            const coords = readableCoordinates(latlng);
+            const name = feature.properties.name + '</br>';
+            const loc = 'N '+ coords[0] + ' E ' + coords[1];
+            const popupText = name + loc;
+
+            return L.marker(
+              latlng,
+              { icon: caveIcons[feature.properties.tier-1] }
+            )
+            .bindPopup(popupText)
+            .addTo(caveLayers[feature.properties.tier-1]);
+          }
+        });
       };
 
-      // Todo : documentation for this feature for other devs
-      function loadGeoJsonFromUrl() {
-
-      };
-      
       // Function to convert to N E coordinate people know about
       function readableCoordinates(latlng) {
         return [
@@ -292,11 +384,19 @@
       };
       
       // Bit of code to get the position at the mouse and display it
+      // Could display biome later
       const coordDisplay = document.getElementById('coords');
       map.on('mousemove', function (e) {
         const coords = readableCoordinates(e.latlng);
         coordDisplay.innerText = 'N: ' + coords[0] + ' E: ' + coords[1];
       });
+
+      // Load the things
+      loadTreesGeoJson();
+      loadTemplesGeoJson();
+      loadRuinedGeoJson();
+      loadCavesGeoJson();
+      loadClaimsGeoJson();
 
     </script>
   </body>

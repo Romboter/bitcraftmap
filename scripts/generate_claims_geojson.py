@@ -9,7 +9,7 @@ limit = 100
 all_claims = []
 all_claims_with_buildings = []
 current_page = 1
-sleep_time = 0.25
+sleep_time = 0.5
 claims_url = 'https://bitjita.com/api/claims/'
 user_agent = {'User-agent': 'Manserk For bitcraftmap.com'}
 raw_claims_file = 'assets/data/claims_raw.json'
@@ -101,4 +101,4 @@ claims_geojson = {
 with open(geojson_claims_file, 'w') as file:
     json.dump(claims_geojson, file)
 
-print('Finished after ' + (time.time() - start_time) + ' seconds')
+print('Finished after ' + str(time.time() - start_time) + ' seconds')

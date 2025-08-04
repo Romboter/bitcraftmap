@@ -28,6 +28,7 @@ https://bitcraftmap.com
 
 ## Wild ideas board
 
+- Turn on / Turn off all waypoint
 - Lazy loading of data
 - Do everything for performace and ease of use
 - New interface that follow bitcraft style
