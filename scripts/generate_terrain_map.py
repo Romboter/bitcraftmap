@@ -1,5 +1,6 @@
 from PIL import Image, ImageOps
 import numpy as np
+import requests
 # import math
 # import cv2
 
@@ -22,6 +23,7 @@ for i in range(0, len(data), pixel_size):
 
 img_array = np.frombuffer(rgb_data, dtype=np.uint8).reshape((height, width, 3))
 
+# Crop was a good idea but leaflet transform rectangles map to squares...
 # crop_factor = 1.1547005 # magic number
 # crop_pixels = int(height / crop_factor)
 # img_array = img_array[:crop_pixels, :]
@@ -33,7 +35,7 @@ img = img.rotate(180)
 scale_factor = 3
 img = img.resize((2400 * scale_factor, 2400 * scale_factor), resample=Image.NEAREST)
 
-img.save("reconstructed_bgr_image.png")
+img.save('assets/maps/map_new.png')
 img.show()
 
 

@@ -49,7 +49,7 @@
       // However if I load the map with the added ocean at the top, the coordinate system will be screwed
       // Conclusion, We multiply the height by the hexagon ratio to get what would be the real height with added ocean
 
-      // The image itself is this size
+      // The image itself is this size in pixel
 			const imageWidth = 7200;
 			const imageHeight = 7200;
 
@@ -59,8 +59,8 @@
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
-        minZoom: -3,
-        maxZoom: 5,
+        minZoom: -6,
+        maxZoom: 6,
         zoomSnap: 0.1,
         attributionControl: false, // Remove watermark
         zoomControl: false, // Remove the zoom control top left
@@ -229,6 +229,7 @@
       L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
 
       // This is leaflet.search plugin configuration
+      // This plugin need a "title" parameter in each marker to find stuff
       const controlSearch = new L.Control.Search({
         position:'topleft',		
         layer: allClaims,
