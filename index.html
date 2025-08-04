@@ -266,6 +266,7 @@
         zoom: 2
       });
 
+      // Done
       map.addControl(controlSearch);
 
       controlSearch.on('search:locationfound', function(e) {
@@ -273,7 +274,8 @@
           map.addLayer(allClaims);
         }
       });
-
+      // Done
+      
       fetch('assets/markers/trees.msgpack')
       .then(response => response.arrayBuffer())
       .then(buffer => {
@@ -375,13 +377,15 @@
         });
       });
 
+      // Done
       const coordDisplay = document.getElementById('coords');
-
       map.on('mousemove', function (e) {
         const coordN = Math.round(e.latlng.lat * 1.1547005);
         const coordE = e.latlng.lng.toFixed(0);
         coordDisplay.innerText = `N : ${coordN}, E: ${coordE}`;
       });
+      // Done
+
 		</script>
 	</body>
 </html>

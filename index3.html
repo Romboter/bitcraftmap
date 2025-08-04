@@ -251,41 +251,53 @@
         }
       });
 
+
+      async function loadTreesGeoJson() {
+        const file = await fetch('assets/markers/real_trees.geojson');
+        const geojsonData = await file.json();
+        L.geoJSON(geojsonData).addTo(map);
+      };
+      async function loadTemplesGeoJson() {
+        const file = await fetch('assets/markers/real_temples.geojson');
+        const geojsonData = await file.json();
+        L.geoJSON(geojsonData).addTo(map);
+      };
+      async function loadRuinedGeoJson() {
+        const file = await fetch('assets/markers/real_ruined.geojson');
+        const geojsonData = await file.json();
+        L.geoJSON(geojsonData).addTo(map);
+      };
+      async function loadClaimsGeoJson() {
+        const file = await fetch('assets/markers/real_claims.geojson');
+        const geojsonData = await file.json();
+        L.geoJSON(geojsonData).addTo(map);
+      };
+      async function loadCavesGeoJson() {
+        const file = await fetch('assets/markers/real_caves.geojson');
+        const geojsonData = await file.json();
+        L.geoJSON(geojsonData).addTo(map);
+      };
+
+      // Todo : documentation for this feature for other devs
+      function loadGeoJsonFromUrl() {
+
+      };
+      
+      // Function to convert to N E coordinate people know about
+      function readableCoordinates(latlng) {
+        return [
+          Math.round(latlng.lat / 23040 * 7676),
+          Math.round(latlng.lng / 23040 * 7676)
+        ]; 
+      };
+      
       // Bit of code to get the position at the mouse and display it
       const coordDisplay = document.getElementById('coords');
       map.on('mousemove', function (e) {
-        const coordN = e.latlng.lat.toFixed(0);
-        const coordE = e.latlng.lng.toFixed(0);
-        coordDisplay.innerText = 'N: ' + coordN + ' E: ' + coordE;
+        const coords = readableCoordinates(e.latlng);
+        coordDisplay.innerText = 'N: ' + coords[0] + ' E: ' + coords[1];
       });
 
-      fetch('assets/markers/real_claims.geojson')
-      .then(buffer => {
-        const data = msgpack.decode(new Uint8Array(buffer));
-        data.forEach(node => {
-          const pos_e = Math.round(node[1]);
-          const pos_n = Math.round(node[2]);
-          const tierIndex = node[4] - 1;
-
-          const text = 
-            caveSize[node[3]-1] + ' ' + oreTier[node[4]-1] + ' Cave'
-            + '</br>N '+ pos_n + ' E ' + pos_e;
-          // Magic number 1.1547005
-          L.marker([pos_n / 1.1547005, pos_e], {icon: caveIcons[node[4]-1]})
-          .bindPopup(text)
-          .addTo(caveLayers[tierIndex]);
-        });
-      });
-
-      async function loadGeoJSON() {
-        const file = await fetch('assets/markers/real_claims.geojson');
-        const geojsonData = await file.json();
-
-        L.geoJSON(geojsonData).addTo(map);
-
-      };
-
-      loadGeoJSON();
     </script>
   </body>
 </html>

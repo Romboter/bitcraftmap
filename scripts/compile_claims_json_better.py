@@ -33,7 +33,7 @@ def generate_claims_json(json_key):
         }
     }
 
-with open('assets/markers/claims.geojson', 'r', encoding='utf-8') as file:
+with open('assets/data/claims_raw.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 claims_geojson = {

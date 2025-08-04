@@ -1,11 +1,6 @@
 import json
-import msgpack
 
-def generate_caves_json(json_key):
-    if 'Cave' not in json_key['name']:
-        return None
-    
-    size = 2 if 'Large' in json_key['name'] else 1
+def generate_caves_geojson(json_key):
 
     ore_tiers = {
        1: 'Ferralith',
@@ -19,6 +14,11 @@ def generate_caves_json(json_key):
        9: 'Umbracite',
        10: 'Astralite'
     }
+        
+    if 'Cave' not in json_key['name']:
+        return None
+    
+    size = 2 if 'Large' in json_key['name'] else 1
 
     for tier_id, tier_name in ore_tiers.items():
         if tier_name in json_key['name']:
@@ -26,71 +26,83 @@ def generate_caves_json(json_key):
             break
 
     return {
-        '1': json_key['location']['x'] / 23040 * 7676,
-        '2': json_key['location']['z'] / 23040 * 7676,
-        '3': size,
-        '4': tier
+        "type": "Feature",
+        "properties": {
+            "name": json_key['name'],
+            "size": size,
+            "tier": tier
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [json_key['location']['x'], json_key['location']['z']]
+        }
     }
 
-def generate_trees_json(json_key):
+def generate_trees_geojson(json_key):
     if 'Tree' not in json_key['name']: 
         return None
-    
+
     return {
-        '1': json_key['location']['x'] / 23040 * 7676,
-        '2': json_key['location']['z'] / 23040 * 7676
+        "type": "Feature",
+        "properties": {
+            "name": json_key['name'],
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [json_key['location']['x'], json_key['location']['z']]
+        }
     }
 
-def generate_temples_json(json_key):
+def generate_temples_geojson(json_key):
     if 'Temple' not in json_key['name']:
         return None
-    
+
     return {
-        '1': json_key['location']['x'] / 23040 * 7676,
-        '2': json_key['location']['z'] / 23040 * 7676,
-        '3': json_key['name']
+        "type": "Feature",
+        "properties": {
+            "name": json_key['name']
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [json_key['location']['x'], json_key['location']['z']]
+        }
     }
 
-def generate_ruined_json(json_key):
+def generate_ruined_geojson(json_key):
+    # Ruined cities have non descriptive names
     if any(keyword in json_key['name'] for keyword in ['Tree', 'Cave', 'Temple']):
         return None
-    
+
     return {
-        '1': json_key['location']['x'] / 23040 * 7676,
-        '2': json_key['location']['z'] / 23040 * 7676,
-        '3': json_key['name']
+        "type": "Feature",
+        "properties": {
+            "name": json_key['name'],
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [json_key['location']['x'], json_key['location']['z']]
+        }
     }
 
-
-'''
-with open('assets/markers/claims.msgpack', 'wb') as file:
-    packed = msgpack.packb(claims_json)
-    file.write(packed)
-
-### Data from caves.json
+# Load data from caves.json
 with open('assets/data/caves.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
 
-caves_json = [generate_caves_json(key) for key in data if generate_caves_json(key) is not None]
-trees_json = [generate_trees_json(key) for key in data if generate_trees_json(key) is not None]
-ruined_json = [generate_ruined_json(key) for key in data if generate_ruined_json(key) is not None]
-temples_json = [generate_temples_json(key) for key in data if generate_temples_json(key) is not None]
+print(data)
 
-with open('assets/markers/caves.msgpack', 'wb') as file:
-    packed_caves = msgpack.packb(caves_json)
-    file.write(packed_caves)
-with open('assets/markers/trees.msgpack', 'wb') as file:
-    packed_trees = msgpack.packb(trees_json)
-    file.write(packed_trees)
-with open('assets/markers/ruined.msgpack', 'wb') as file:
-    packed_ruined = msgpack.packb(ruined_json)
-    file.write(packed_ruined)
-with open('assets/markers/temples.msgpack', 'wb') as file:
-    packed_temples = msgpack.packb(temples_json)
-    file.write(packed_temples)
+# Parse and save date to respective geojson files
+with open('assets/markers/real_caves.geojson', 'w') as file:
+    caves_json = [generate_caves_geojson(key) for key in data if generate_caves_geojson(key) is not None]
+    json.dump(caves_json, file)
 
-#for entry in data:
-#    transformed = generate_ruined_json(entry)
-#    if transformed is not None:
-#        print(transformed)
-'''
+with open('assets/markers/real_trees.geojson', 'w') as file:
+    trees_json = [generate_trees_geojson(key) for key in data if generate_trees_geojson(key) is not None]
+    json.dump(trees_json, file)
+
+with open('assets/markers/real_ruined.geojson', 'w') as file:
+    ruined_json = [generate_ruined_geojson(key) for key in data if generate_ruined_geojson(key) is not None]
+    json.dump(ruined_json, file)
+
+with open('assets/markers/real_temples.geojson', 'w') as file:
+    temples_json = [generate_temples_geojson(key) for key in data if generate_temples_geojson(key) is not None]
+    json.dump(temples_json, file)
