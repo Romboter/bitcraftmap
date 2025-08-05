@@ -7,7 +7,9 @@ import requests
 width = height = 2400
 pixel_size = 8 
 
-with open("TerrainMap.uncompressed", "rb") as f:
+# https://maps.game.bitcraftonline.com/world-maps/TerrainMap.gwm
+
+with open("TerrainMap.gwm.unc", "rb") as f:
     data = f.read()
 
 expected_size = width * height * pixel_size
@@ -35,7 +37,7 @@ img = img.rotate(180)
 scale_factor = 3
 img = img.resize((2400 * scale_factor, 2400 * scale_factor), resample=Image.NEAREST)
 
-img.save('assets/maps/map_new.png')
+img.save('TerrainMap.gwm.png')
 img.show()
 
 

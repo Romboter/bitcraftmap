@@ -398,12 +398,42 @@
       loadClaimsGeoJson();
 
       // wip
+      // Add features :
+      // Write a couple of testing strings
+
+
+      // For break line -> ask for an array
+
+      // feature.properties.layerOn  // String
+      // feature.properties.iconName // String
+      // feature.bbox                // Array of coordinates
+
+      function zoomToBbox(array) {
+        var group = new L.featureGroup([marker1, marker2, marker3]);
+        map.fitBounds(group.getBounds());
+      };
+
+      function writePopup(array) {
+        // If string
+        // If array
+
+        return 'some text';
+      };
+
+      const waypointsLayer = L.layerGroup();
+
       function loadGeoJsonFromUrl() {
         try {
+          // Add back the quotes
           const hash = location.hash.slice(1).replace(/%22/g, '"');
-          if (!hash) return; // case with a #but nothing behind it
 
-          const geoJson = JSON.parse(hash);
+          // case with a # but nothing behind it
+          if (!hash) return; 
+
+          // If this fail the try catch will handle it and we can exit clean
+          const geoJson = JSON.parse(hash); 
+
+          // Don't give an array, you can make a feature collection instead
           if (Array.isArray(geoJson)) throw new Error('geoJson must not be an array');
 
           L.geoJSON(geoJson, {
@@ -440,10 +470,11 @@
                 layer.bindPopup(feature.properties.name);
               }
             }
-          }).addTo(map);
+          })
+          
+          .addTo(waypointsLayer); // Make specific group for hash
 
-          allClaims.addTo(map);
-
+          // Replace with bounding box
           if (geoJson['properties']['flyTo'] || geoJson['properties']['zoomTo']) {
             map.flyTo( 
               [geoJson['properties']['flyTo'][1], geoJson['properties']['flyTo'][0]],

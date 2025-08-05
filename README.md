@@ -17,10 +17,6 @@ https://bitcraftmap.com
 - https://docs.mapbox.com/mapbox-gl-js/api/
 - https://github.com/mapbox/geobuf
 
-## Check later
-- https://leafletjs.com/plugins.html#layer-switching-controls
-- https://github.com/stefanocudini/leaflet-search/tree/master / https://opengeo.tech/maps/leaflet-search/
-
 ## Roadmap
 
 1 Finish the better coordinates system and clean up script
@@ -72,8 +68,11 @@ https://bitcraftmap.com
 
 
 
-// Check later 
 
+## Check later
+
+- https://leafletjs.com/plugins.html#layer-switching-controls
+- https://github.com/stefanocudini/leaflet-search/tree/master / https://opengeo.tech/maps/leaflet-search/
 - https://worace.works/2022/02/23/kicking-the-tires-flatgeobuf/
 - https://pasq.fr/flatgeobuf-soyons-binaire
 - https://flatgeobuf.org/examples/leaflet/
