@@ -419,7 +419,7 @@
         return 'some text';
       };
 
-      // const waypointsLayer = L.layerGroup();
+      const waypointsLayer = L.layerGroup();
 
       function loadGeoJsonFromUrl() {
         try {
@@ -489,7 +489,8 @@
 
       // if (location.hash) loadGeoJsonFromUrl();
       loadGeoJsonFromUrl();
-      
+      map.addLayer(waypointsLayer);
+
     </script>
   </body>
 </html>
