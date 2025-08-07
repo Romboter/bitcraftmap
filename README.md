@@ -120,4 +120,5 @@ https://bitcraftmap.com
 - https://stackoverflow.com/questions/12262163/what-are-leaflet-and-mapbox-and-what-are-their-differences
 - (ablion map) view-source:https://albiononline2d.com/public/js/map.js https://albiononline2d.com/en/map/2202
 
-
+- https://genshin-impact-map.appsample.com/?map=teyvat
+- https://act.hoyolab.com/ys/app/interactive-map/index.html
