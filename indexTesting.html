@@ -402,7 +402,6 @@
         coordDisplay.innerText = 'N: ' + coords[0] + ' E: ' + coords[1];
       });
 
-      // Todo : Write a couple of testing strings
       function loadGeoJsonFromUrl() {
         try {
           const hashFromUrl =
@@ -423,6 +422,10 @@
           if (Array.isArray(geoJsonFromUrl)) throw new Error('geoJson must not be an array');
 
           // We should validate GeoJson at this point (https://www.npmjs.com/package/@mapbox/geojsonhint ?)
+          // And validate the values ? 
+          // TODO: validate iconName from predefined list
+          // TODO: validate turnLayerOn and Off from predefined list
+
           L.geoJSON(geoJsonFromUrl, {
             pointToLayer: function(feature, latlng) {
 
@@ -431,7 +434,6 @@
 
               let iconPath = 'assets/icons/waypoint.png';
               if (feature.properties?.iconName) {
-                // TODO: validate iconName from predefined list
                 iconPath = 'assets/icons/' + feature.properties.iconName + '.png';
               }
               const waypointIcon = createMapIcon(iconPath, [44, 44], [22, 22], [0, -22]);
@@ -469,7 +471,6 @@
               }
 
               if (feature.properties?.turnLayerOn) {
-                // TODO: validate turnLayerOn from predefined list
                 if (Array.isArray(feature.properties.turnLayerOn)) {
                   for (const layerName of feature.properties.turnLayerOn) {
                     const layer = allLayers[layerName];
@@ -482,7 +483,6 @@
               }
 
               if (feature.properties?.turnLayerOff) {
-                // TODO: validate turnLayerOn from predefined list
                 if (Array.isArray(feature.properties.turnLayerOff)) {
                   for (const layerName of feature.properties.turnLayerOff) {
                     const layer = allLayers[layerName];
