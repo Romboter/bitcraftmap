@@ -220,6 +220,13 @@
         "Caves T10": caveT10Layer
       };
 
+      const allLayers = {
+        claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
+        claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
+        caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
+        caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
+      };
+
       treesLayer.addTo(map);
       templesLayer.addTo(map);
       ruinedLayer.addTo(map);
@@ -244,9 +251,9 @@
       map.addControl(controlSearch);
 
       // Load the allClaims layer when we find some claim on the map
-      controlSearch.on('search:locationfound', function(e) {
-        if (!map.hasLayer(allClaims)) {
-          map.addLayer(allClaims);
+      controlSearch.on('search:locationfound', function(marker) {
+        if (!map.hasLayer(marker.layer)) {
+          map.addLayer(marker.layer);
         }
       });
 
@@ -406,6 +413,7 @@
             .replace(/%7D/g, '}'); // sometimes discord remove these
 
           // case with a # but nothing behind it
+          console.log(hashFromUrl)
           if (!hashFromUrl) throw new Error('location.hash was empty');
 
           // This will validate the Json
@@ -418,16 +426,15 @@
           L.geoJSON(geoJsonFromUrl, {
             pointToLayer: function(feature, latlng) {
 
-              if (feature.properties?.iconName) {
-                // TODO: validate iconName from predefined list
-                const iconPath = 'assets/icons/' + feature.properties.iconName + '.png'
-              } else {
-                const iconPath = 'assets/icons/waypoint.png'
-              }
-              const waypointIcon = createMapIcon(iconPath, [44, 44], [22, 22], [0, -22]);
-
               map.createPane('markerOnTop');
               map.getPane('markerOnTop').style.zIndex = 999;
+
+              let iconPath = 'assets/icons/waypoint.png';
+              if (feature.properties?.iconName) {
+                // TODO: validate iconName from predefined list
+                iconPath = 'assets/icons/' + feature.properties.iconName + '.png';
+              }
+              const waypointIcon = createMapIcon(iconPath, [44, 44], [22, 22], [0, -22]);
 
               return L.marker(
                 latlng,
@@ -448,7 +455,7 @@
             onEachFeature: function(feature, layer) {
               if (feature.properties?.popupText) {
                 const popupText = feature.properties.popupText;
-                const finalPopupText = '';
+                let finalPopupText = '';
 
                 if (Array.isArray(popupText)) {
                   for (const line of popupText) {
@@ -463,12 +470,14 @@
 
               if (feature.properties?.turnLayerOn) {
                 // TODO: validate turnLayerOn from predefined list
-                map.addLayer(feature.properties.turnLayerOn);
+                const layer = allLayers[feature.properties.turnLayerOn];
+                console.log(layer)
+                if (layer) map.addLayer(layer);
               }
-
-              if (Array.isArray(feature.bbox)) {
-                const bboxGroup = new L.featureGroup(feature.bbox);
-                map.fitBounds(bboxGroup.getBounds());
+              if (feature.properties?.flyTo && feature.properties?.zoomTo) {
+                map.flyTo(feature.properties.flyTo, feature.properties.zoomTo);
+              } else if (layer?.getBounds) {
+                map.fitBounds(layer.getBounds());
               }
             }
           }).addTo(waypointsLayer);
