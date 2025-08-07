@@ -136,6 +136,8 @@
       const marketsLayer = L.layerGroup();
       const waystonesLayer = L.layerGroup();
 
+      const waypointsLayer = L.layerGroup();
+
       const claimT0Layer = L.layerGroup();
       const claimT1Layer = L.layerGroup();
       const claimT2Layer = L.layerGroup();
@@ -177,10 +179,10 @@
         "Wonders": treesLayer,
         "Temples": templesLayer,
         "Ruined Cities": ruinedLayer,
-
         "Banks": banksLayer,
         "Markets": marketsLayer,
         "Waystones": waystonesLayer,
+        "Waypoints": waypointsLayer,
       };
 
       const claimsToggle = {
@@ -218,6 +220,14 @@
         "Caves T10": caveT10Layer
       };
 
+      const allLayers = {
+        treesLayer, templesLayer, ruinedLayer, banksLayer, marketsLayer, waystonesLayer, waypointsLayer,
+        claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
+        claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
+        caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
+        caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
+      };
+
       treesLayer.addTo(map);
       templesLayer.addTo(map);
       ruinedLayer.addTo(map);
@@ -242,9 +252,9 @@
       map.addControl(controlSearch);
 
       // Load the allClaims layer when we find some claim on the map
-      controlSearch.on('search:locationfound', function(e) {
-        if (!map.hasLayer(allClaims)) {
-          map.addLayer(allClaims);
+      controlSearch.on('search:locationfound', function(marker) {
+        if (!map.hasLayer(marker.layer)) {
+          map.addLayer(marker.layer);
         }
       });
 
@@ -256,7 +266,7 @@
           pointToLayer: function(feature, latlng) {
             
             const coords = readableCoordinates(latlng);
-            const name = feature.properties.name + '</br>';
+            const name = feature.properties.name + '<br>';
             const loc = 'N '+ coords[0] + ' E ' + coords[1];
             const popupText = name + loc;
 
@@ -277,7 +287,7 @@
           pointToLayer: function(feature, latlng) {
 
             const coords = readableCoordinates(latlng);
-            const name = feature.properties.name + '</br>';
+            const name = feature.properties.name + '<br>';
             const loc = 'N '+ coords[0] + ' E ' + coords[1];
             const popupText = name + loc;
 
@@ -298,7 +308,7 @@
           pointToLayer: function(feature, latlng) {
 
             const coords = readableCoordinates(latlng);
-            const name = feature.properties.name + '</br>';
+            const name = feature.properties.name + '<br>';
             const loc = 'N '+ coords[0] + ' E ' + coords[1];
             const popupText = name + loc;
 
@@ -320,10 +330,10 @@
 
           const coords = readableCoordinates(latlng);
           const name = '<a href="' + 'https://bitjita.com/claims/' + feature.properties.entityId + '" target="_blank">' + feature.properties.name + '</a>';
-          const tier = ' (T' + feature.properties.tier + ')' + '</br>';
-          const loc = 'N '+ coords[0] + ' E ' + coords[1] + '</br>';
-          const has_bank = 'Bank : ' + (feature.properties.has_bank ? 'Yes' : 'No') + '</br>';
-          const has_market = 'Market : ' + (feature.properties.has_market ? 'Yes' : 'No') + '</br>';
+          const tier = ' (T' + feature.properties.tier + ')' + '<br>';
+          const loc = 'N '+ coords[0] + ' E ' + coords[1] + '<br>';
+          const has_bank = 'Bank : ' + (feature.properties.has_bank ? 'Yes' : 'No') + '<br>';
+          const has_market = 'Market : ' + (feature.properties.has_market ? 'Yes' : 'No') + '<br>';
           const has_Waystone = 'Waystone : ' + (feature.properties.has_waystone ? 'Yes' : 'No');
           const popupText = name + tier + loc + has_bank + has_market + has_Waystone;
 
@@ -360,7 +370,7 @@
           pointToLayer: function(feature, latlng) {
 
             const coords = readableCoordinates(latlng);
-            const name = feature.properties.name + '</br>';
+            const name = feature.properties.name + '<br>';
             const loc = 'N '+ coords[0] + ' E ' + coords[1];
             const popupText = name + loc;
 
@@ -384,11 +394,120 @@
       
       // Bit of code to get the position at the mouse and display it
       // Could display biome later
+      // Could display ingame time, travaler task reset timer
+      // Could turn on an of with an optional checkbox
       const coordDisplay = document.getElementById('coords');
       map.on('mousemove', function (e) {
         const coords = readableCoordinates(e.latlng);
         coordDisplay.innerText = 'N: ' + coords[0] + ' E: ' + coords[1];
       });
+
+      function loadGeoJsonFromUrl() {
+        try {
+          const hashFromUrl =
+            location.hash
+            .slice(1)              // Removing the "#"
+            .replace(/%20/g, ' ')  // Names can contain spaces
+            .replace(/%22/g, '"')  // We need " for json
+            .replace(/%7B/g, '{')  // sometimes discord remove these
+            .replace(/%7D/g, '}'); // sometimes discord remove these
+
+          // case with a # but nothing behind it
+          if (!hashFromUrl) throw new Error('location.hash was empty');
+
+          // This will validate the Json
+          const geoJsonFromUrl = JSON.parse(hashFromUrl);
+
+          // Don't give an array, you can make a feature collection instead
+          if (Array.isArray(geoJsonFromUrl)) throw new Error('geoJson must not be an array');
+
+          // We should validate GeoJson at this point (https://www.npmjs.com/package/@mapbox/geojsonhint ?)
+          // And validate the values ? 
+          // TODO: validate iconName from predefined list
+          // TODO: validate turnLayerOn and Off from predefined list
+
+          L.geoJSON(geoJsonFromUrl, {
+            pointToLayer: function(feature, latlng) {
+
+              map.createPane('markerOnTop');
+              map.getPane('markerOnTop').style.zIndex = 999;
+
+              let iconPath = 'assets/icons/waypoint.png';
+              if (feature.properties?.iconName) {
+                iconPath = 'assets/icons/' + feature.properties.iconName + '.png';
+              }
+              const waypointIcon = createMapIcon(iconPath, [44, 44], [22, 22], [0, -22]);
+
+              return L.marker(
+                latlng,
+                { icon: waypointIcon, pane: 'markerOnTop' }
+              );
+            },
+
+            style: function(feature) {
+              return {
+                color: feature.properties?.color || "#3388ff",
+                weight: feature.properties?.weight || 3,
+                opacity: feature.properties?.opacity || 1,
+                fillColor: feature.properties?.fillColor || "#3388ff",
+                fillOpacity: feature.properties?.fillOpacity ?? 0.2
+              };
+            },
+
+            onEachFeature: function(feature, layer) {
+              if (feature.properties?.popupText) {
+                const popupText = feature.properties.popupText;
+                let finalPopupText = '';
+
+                if (Array.isArray(popupText)) {
+                  for (const line of popupText) {
+                    finalPopupText += line + '<br>';
+                  }
+                } else {
+                  finalPopupText = popupText;
+                }
+                
+                layer.bindPopup(finalPopupText);
+              }
+
+              if (feature.properties?.turnLayerOn) {
+                if (Array.isArray(feature.properties.turnLayerOn)) {
+                  for (const layerName of feature.properties.turnLayerOn) {
+                    const layer = allLayers[layerName];
+                    if (layer) map.addLayer(layer);
+                  }
+                } else {
+                  const layer = allLayers[feature.properties.turnLayerOn];
+                  if (layer) map.addLayer(layer);
+                }
+              }
+
+              if (feature.properties?.turnLayerOff) {
+                if (Array.isArray(feature.properties.turnLayerOff)) {
+                  for (const layerName of feature.properties.turnLayerOff) {
+                    const layer = allLayers[layerName];
+                    if (layer) map.removeLayer(layer);
+                  }
+                } else {
+                  const layer = allLayers[feature.properties.turnLayerOff];
+                  if (layer) map.removeLayer(layer);
+                }
+              }
+
+              if (feature.properties?.flyTo && feature.properties?.zoomTo) {
+                map.flyTo(feature.properties.flyTo, feature.properties.zoomTo);
+              } else if (layer?.getBounds) {
+                map.fitBounds(layer.getBounds());
+              }
+            }
+          }).addTo(waypointsLayer);
+
+          map.addLayer(waypointsLayer);
+        } catch (error) {
+          console.log(error);
+          return;
+        } 
+      };
 
       // Load the things
       loadTreesGeoJson();
@@ -396,7 +515,7 @@
       loadRuinedGeoJson();
       loadCavesGeoJson();
       loadClaimsGeoJson();
-
+      loadGeoJsonFromUrl();
     </script>
   </body>
 </html>
