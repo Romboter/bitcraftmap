@@ -221,6 +221,7 @@
       };
 
       const allLayers = {
+        treesLayer, templesLayer, ruinedLayer, banksLayer, marketsLayer, waystonesLayer, waypointsLayer,
         claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
         claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
         caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
@@ -413,7 +414,6 @@
             .replace(/%7D/g, '}'); // sometimes discord remove these
 
           // case with a # but nothing behind it
-          console.log(hashFromUrl)
           if (!hashFromUrl) throw new Error('location.hash was empty');
 
           // This will validate the Json
@@ -470,10 +470,30 @@
 
               if (feature.properties?.turnLayerOn) {
                 // TODO: validate turnLayerOn from predefined list
-                const layer = allLayers[feature.properties.turnLayerOn];
-                console.log(layer)
-                if (layer) map.addLayer(layer);
+                if (Array.isArray(feature.properties.turnLayerOn)) {
+                  for (const layerName of feature.properties.turnLayerOn) {
+                    const layer = allLayers[layerName];
+                    if (layer) map.addLayer(layer);
+                  }
+                } else {
+                  const layer = allLayers[feature.properties.turnLayerOn];
+                  if (layer) map.addLayer(layer);
+                }
               }
+
+              if (feature.properties?.turnLayerOff) {
+                // TODO: validate turnLayerOn from predefined list
+                if (Array.isArray(feature.properties.turnLayerOff)) {
+                  for (const layerName of feature.properties.turnLayerOff) {
+                    const layer = allLayers[layerName];
+                    if (layer) map.removeLayer(layer);
+                  }
+                } else {
+                  const layer = allLayers[feature.properties.turnLayerOff];
+                  if (layer) map.removeLayer(layer);
+                }
+              }
+
               if (feature.properties?.flyTo && feature.properties?.zoomTo) {
                 map.flyTo(feature.properties.flyTo, feature.properties.zoomTo);
               } else if (layer?.getBounds) {
