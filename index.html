@@ -228,6 +228,14 @@
         caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
       };
 
+      const searchLayer = [
+        claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
+        claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer, ruinedLayer
+      ];
+
+      const allSearch = L.layerGroup(searchLayer);
+
+
       treesLayer.addTo(map);
       templesLayer.addTo(map);
       ruinedLayer.addTo(map);
@@ -242,11 +250,11 @@
       // This plugin need a "title" parameter in each marker to find stuff
       const controlSearch = new L.Control.Search({
         position:'topleft',		
-        layer: allClaims,
+        layer: allSearch,
         initial: false,
         marker: false,
         firstTipSubmit: true,
-        zoom: 1
+        zoom: 0
       });
 
       map.addControl(controlSearch);
@@ -314,7 +322,10 @@
 
             return L.marker(
               latlng,
-              { icon: ruinedIcon }
+              { 
+                title: feature.properties.name,
+                icon: ruinedIcon
+              }
             )
             .bindPopup(popupText)
             .addTo(ruinedLayer);

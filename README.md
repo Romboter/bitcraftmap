@@ -19,15 +19,13 @@ https://bitcraftmap.com
 
 ## Roadmap
 
-1 Finish the better coordinates system and clean up script
-2 Finish the geojson sharing feature and release
-3 make the higher resolution hexagon map with opencv and numpy (should be easy and high value)
+1 Make generic functions to load geoJson (from url, from server file, from hash)
+2 Work on user interface
+3 make the higher resolution hexagon map with opencv and numpy
 
 ## Wild ideas board
 
 - Turn on / Turn off all waypoint
-- Lazy loading of data
-- Do everything for performace and ease of use
 - New interface that follow bitcraft style
 - Pathfinder using terrain elevation data
 - Coordinates to biome calculator
