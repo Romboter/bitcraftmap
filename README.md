@@ -34,10 +34,12 @@ https://bitcraftmap.com
 - Query the database instead of getting data from bitjita
 - Calculate walkable zones (ie where cart can go because there is no water)
 - Do a community map instead of a spoiler map at launch
+- "count" each filter
 
 - Players data
     - Show player waystone
     - Show player missing waystones
+    - calculate 'closest known waystone' to a location
     - Calculate player heat density zones
     - Show players on the map dynamically
     - See people exploration level in real time
@@ -51,12 +53,14 @@ https://bitcraftmap.com
     - Show empire borders
     - Show watchtowers
     - More info about watchtowers (expiration / war...)
+    - Show and search information related to empire (ex : search by empire name, number of tower)
 
 - Misc :
     - Show region names
     - Show regions grid
     - Show chunks grid
-
+    - bitcraft ingame time
+    - traveler quest reset timer
 
 ## Pass geoJson with the location.hash
 

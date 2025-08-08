@@ -96,7 +96,23 @@
       mediumSizeIcon = [[44, 44],[22, 22],[0, -22]];
       largeSizeIcon = [[50, 50],[25, 25],[0, -25]];
 
+      /*
+      for (let i = 0; i < 10000; i++) {
+        // Random lat/lng within cur rent view
+        let lat = Math.random() * 23040;
+        let lng = Math.random() * 23040;
 
+        L.circleMarker([lat, lng], {
+          radius: 2,
+          color: '#3388ff',
+          weight: 1,
+          opacity: 1,
+          fillColor: '#3388ff',
+          fillOpacity: 1
+        }).addTo(map);
+      }
+      */
+     
       const caveIcons = [
         createMapIcon('assets/images/ore/t1.png', smallSizeIcon),
         createMapIcon('assets/images/ore/t2.png', smallSizeIcon),
@@ -127,10 +143,6 @@
       const ruinedIcon = createMapIcon('assets/images/claim/ruined.png', mediumSizeIcon);
       const templeIcon = createMapIcon('assets/images/poi/temple.svg');
       const treeIcon = createMapIcon('assets/images/poi/tree.svg');
-
-      const allIcons = {
-
-      };
 
       const treesLayer = L.layerGroup();
       const ruinedLayer = L.layerGroup();
