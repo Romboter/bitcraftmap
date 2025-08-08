@@ -20,6 +20,7 @@ https://bitcraftmap.com
 ## Roadmap
 
 1 Make generic functions to load geoJson (from url, from server file, from hash)
+1.5 Sort icons, make icon list and layer list for validation
 2 Work on user interface
 3 make the higher resolution hexagon map with opencv and numpy
 
@@ -33,7 +34,6 @@ https://bitcraftmap.com
 - Query the database instead of getting data from bitjita
 - Calculate walkable zones (ie where cart can go because there is no water)
 - Do a community map instead of a spoiler map at launch
-- When you search, searching doesnt search in other poi than claims (ruined cities, temple etc..) to fix
 
 - Players data
     - Show player waystone
