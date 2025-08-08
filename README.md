@@ -19,8 +19,8 @@ https://bitcraftmap.com
 
 ## Roadmap
 
-1 Make generic functions to load geoJson (from url, from server file, from hash)
-1.5 Sort icons, make icon list and layer list for validation
+0 rewrite code to have generic geoJson
+1 Sort icons, make icon list and layer list for validation
 2 Work on user interface
 3 make the higher resolution hexagon map with opencv and numpy
 

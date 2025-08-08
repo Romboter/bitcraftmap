@@ -80,62 +80,64 @@
       //               v                     v
       map.setView([bitcraftHeight/2, bitcraftWidth/2], -3);
 
-      function createMapIcon(
-        iconUrl,
-        iconSize = [32, 32],
-        iconAnchor = [16, 16],
-        popupAnchor = [0, -16]
-      ) {
+      function createMapIcon(iconUrl, iconConfig = [[32, 32],[16, 16],[0, -16]]) {
         return L.icon({
           iconUrl: iconUrl,
-          iconSize: iconSize,
-          iconAnchor: iconAnchor,
-          popupAnchor: popupAnchor,
+          iconSize: iconConfig[0],
+          iconAnchor: iconConfig[1],
+          popupAnchor: iconConfig[2],
           shadowUrl: null,
           shadowSize: null,
           shadowAnchor: null
         });
       };
 
+      smallSizeIcon = [[26, 26],[13, 13],[0, -13]];
+      mediumSizeIcon = [[44, 44],[22, 22],[0, -22]];
+      largeSizeIcon = [[50, 50],[25, 25],[0, -25]];
+
+
       const caveIcons = [
-        createMapIcon('assets/icons/ore/FerralithOreChunk.png'),
-        createMapIcon('assets/icons/ore/PyreliteOreChunk.png'),
-        createMapIcon('assets/icons/ore/EmariumOreChunk.png'),
-        createMapIcon('assets/icons/ore/ElenvarOreChunk.png'),
-        createMapIcon('assets/icons/ore/LuminiteOreChunk.png'),
-        createMapIcon('assets/icons/ore/RathiumOreChunk.png'),
-        createMapIcon('assets/icons/ore/AurumiteOreChunk.png'),
-        createMapIcon('assets/icons/ore/CelestiumOreChunk.png'),
-        createMapIcon('assets/icons/ore/UmbraciteOreChunk.png'),
-        createMapIcon('assets/icons/ore/AstraliteOreChunk.png')
+        createMapIcon('assets/images/ore/t1.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t2.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t3.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t4.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t5.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t6.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t7.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t8.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t9.png', smallSizeIcon),
+        createMapIcon('assets/images/ore/t10.png', smallSizeIcon)
       ];
 
       const claimIcons = [
-        createMapIcon('assets/icons/claim/t0.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t1.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t2.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t3.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t4.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t5.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t6.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t7.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t8.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t9.png',  [44, 44], [22, 22], [0, -22]),
-        createMapIcon('assets/icons/claim/t10.png', [44, 44], [22, 22], [0, -22])
+        createMapIcon('assets/images/claim/t0.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t1.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t2.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t3.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t4.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t5.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t6.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t7.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t8.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t9.png', mediumSizeIcon),
+        createMapIcon('assets/images/claim/t10.png', mediumSizeIcon)
       ];
 
-      const ruinedIcon = createMapIcon('assets/icons/claim/ruined.png',  [44, 44], [22, 22], [0, -22]);
-      const templeIcon = createMapIcon('assets/icons/temple.svg');
-      const treeIcon = createMapIcon('assets/icons/tree.svg');
+      const ruinedIcon = createMapIcon('assets/images/claim/ruined.png', mediumSizeIcon);
+      const templeIcon = createMapIcon('assets/images/poi/temple.svg');
+      const treeIcon = createMapIcon('assets/images/poi/tree.svg');
+
+      const allIcons = {
+
+      };
 
       const treesLayer = L.layerGroup();
       const ruinedLayer = L.layerGroup();
       const templesLayer = L.layerGroup();
-
       const banksLayer = L.layerGroup();
       const marketsLayer = L.layerGroup();
       const waystonesLayer = L.layerGroup();
-
       const waypointsLayer = L.layerGroup();
 
       const claimT0Layer = L.layerGroup();
@@ -156,6 +158,7 @@
       ];
 
       const allClaims = L.layerGroup(claimLayers);
+      const searchGroup = L.layerGroup(claimLayers.concat(ruinedLayer));
 
       const caveT1Layer = L.layerGroup();
       const caveT2Layer = L.layerGroup();
@@ -221,52 +224,36 @@
       };
 
       const allLayers = {
-        treesLayer, templesLayer, ruinedLayer, banksLayer, marketsLayer, waystonesLayer, waypointsLayer,
+        treesLayer, templesLayer, ruinedLayer, banksLayer,
+        marketsLayer, waystonesLayer, waypointsLayer,
         claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
         claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
         caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
         caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
       };
 
-      const searchLayer = [
-        claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
-        claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer, ruinedLayer
-      ];
-
-      const allSearch = L.layerGroup(searchLayer);
-
-
-      treesLayer.addTo(map);
-      templesLayer.addTo(map);
-      ruinedLayer.addTo(map);
-
-      L.control.layers(null, genericToggle, { collapsed: false }).addTo(map);
-      L.control.layers(null, claimsToggle, { collapsed: false }).addTo(map);
-      L.control.layers(null, claimsTierToggle, { collapsed: false }).addTo(map);
-      L.control.layers(null, cavesToggle, { collapsed: false }).addTo(map);
-      L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
-
       // This is leaflet.search plugin configuration
       // This plugin need a "title" parameter in each marker to find stuff
-      const controlSearch = new L.Control.Search({
+      const searchControlOptions = {
         position:'topleft',		
-        layer: allSearch,
+        layer: searchGroup,
         initial: false,
         marker: false,
         firstTipSubmit: true,
         zoom: 0
-      });
+      };
+      const searchControl = new L.Control.Search(searchControlOptions);
 
-      map.addControl(controlSearch);
-
-      // Load the allClaims layer when we find some claim on the map
-      controlSearch.on('search:locationfound', function(marker) {
+      // Load the marker if it is no already on the map
+      searchControl.on('search:locationfound', function(marker) {
         if (!map.hasLayer(marker.layer)) {
           map.addLayer(marker.layer);
         }
       });
 
-
+      // -------------------------------------- //
+      // This is getting replaced
+      // -------------------------------------- //
       async function loadTreesGeoJson() {
         const file = await fetch('assets/markers/trees.geojson');
         const geojsonData = await file.json();
@@ -287,7 +274,6 @@
           }
         });
       };
-
       async function loadTemplesGeoJson() {
         const file = await fetch('assets/markers/temples.geojson');
         const geojsonData = await file.json();
@@ -308,7 +294,6 @@
           }
         });
       };
-
       async function loadRuinedGeoJson() {
         const file = await fetch('assets/markers/ruined.geojson');
         const geojsonData = await file.json();
@@ -332,7 +317,6 @@
           }
         });
       };
-
       async function loadClaimsGeoJson() {
         const file = await fetch('assets/markers/claims.geojson');
         const geojsonData = await file.json();
@@ -373,7 +357,6 @@
           }
         });
       };
-
       async function loadCavesGeoJson() {
         const file = await fetch('assets/markers/caves.geojson');
         const geojsonData = await file.json();
@@ -394,6 +377,9 @@
           }
         });
       };
+      // -------------------------------------- //
+      // This is getting replaced
+      // -------------------------------------- //
 
       // Function to convert to N E coordinate people know about
       function readableCoordinates(latlng) {
@@ -522,6 +508,18 @@
 
         map.addLayer(waypointsLayer);
       }
+
+      // Default layer to show on map opening
+      treesLayer.addTo(map);
+      templesLayer.addTo(map);
+      ruinedLayer.addTo(map);
+      searchControl.addTo(map);
+
+      L.control.layers(null, genericToggle, { collapsed: false }).addTo(map);
+      L.control.layers(null, claimsToggle, { collapsed: false }).addTo(map);
+      L.control.layers(null, claimsTierToggle, { collapsed: false }).addTo(map);
+      L.control.layers(null, cavesToggle, { collapsed: false }).addTo(map);
+      L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
 
       // Load files
       loadTreesGeoJson();
