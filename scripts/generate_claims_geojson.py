@@ -12,7 +12,7 @@ current_page = 1
 sleep_time = 0.5
 claims_url = 'https://bitjita.com/api/claims/'
 user_agent = {'User-agent': 'Manserk For bitcraftmap.com'}
-raw_claims_file = 'assets/markers/claims.json'
+raw_claims_file = 'assets/data/claims.json' # This file will be too big we need to gitignore it
 geojson_claims_file = 'assets/markers/claims.geojson'
 
 # Requesting the first page of the claim list
