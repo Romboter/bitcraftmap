@@ -54,6 +54,7 @@ https://bitcraftmap.com
     - Show watchtowers
     - More info about watchtowers (expiration / war...)
     - Show and search information related to empire (ex : search by empire name, number of tower)
+    - Make capital of empire stand out
 
 - Misc :
     - Show region names
@@ -61,6 +62,25 @@ https://bitcraftmap.com
     - Show chunks grid
     - bitcraft ingame time
     - traveler quest reset timer
+    - user control of what icons are on top
+    - legends
+    - 3D scene to show resources as they are ingame
+
+- Thoughs about a navigation algorithm
+    - input starting position or "locate me" from name
+    - input destination
+    - Do you want to use waystones ?
+    - How many energy do you have ?
+    - what do you want to carry ? (% of inventory ?)
+    - Does the user want to move cargo ?
+    - Calculate zones where its better to move around water than deploying a boat
+    - So we need list of deployable from the user
+    - calculate total time
+
+- Navigation "addon"
+    - Find a way to display an overlaw over bitcraft to show an arrow when the user want to move to a destination
+
+
 
 ## Pass geoJson with the location.hash
 
