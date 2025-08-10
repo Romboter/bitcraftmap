@@ -36,6 +36,7 @@ https://bitcraftmap.com
 - Do a community map instead of a spoiler map at launch
 - "count" each filter
 - Save setting via cookie or local storage ?
+- Have a lexicon with resources screenshots
 
 - Players data
     - Show player waystone
