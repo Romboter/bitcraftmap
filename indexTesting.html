@@ -535,16 +535,17 @@
         }
 
         for (const feature of jsonFormString.features) {
-
-          if (
-            Array.isArray(feature.properties?.popupText)
-            && feature.properties.popupText.every(value => value.constructor.name === 'String')
-          ) {
-            feature.properties.popupText.forEach((value, index, array) => {
-              array[index] = escapeHTML(value);
-            });
-          } else if (feature.properties.popupText.constructor.name === 'String') {
-            feature.properties.popupText = escapeHTML(feature.properties.popupText);
+          if (feature.properties?.popupText) {
+            if (
+              Array.isArray(feature.properties.popupText)
+              && feature.properties.popupText.every(value => value.constructor.name === 'String')
+            ) {
+              feature.properties.popupText = feature.properties.popupText.map(escapeHTML);
+            } else if (feature.properties.popupText.constructor.name === 'String') {
+              feature.properties.popupText = escapeHTML(feature.properties.popupText);
+            } else {
+              throw new Error('popupText must be string or array of strings');
+            }
           }
         }
         console.log(jsonFormString)
