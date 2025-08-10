@@ -35,6 +35,7 @@ https://bitcraftmap.com
 - Calculate walkable zones (ie where cart can go because there is no water)
 - Do a community map instead of a spoiler map at launch
 - "count" each filter
+- Save setting via cookie or local storage ?
 
 - Players data
     - Show player waystone

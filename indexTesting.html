@@ -545,8 +545,6 @@
             });
           } else if (feature.properties.popupText.constructor.name === 'String') {
             feature.properties.popupText = escapeHTML(feature.properties.popupText);
-          } else {
-            throw new Error('popupText must be string or array of strings');
           }
         }
         console.log(jsonFormString)
