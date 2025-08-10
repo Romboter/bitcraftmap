@@ -385,9 +385,6 @@
       };
       
       // Bit of code to get the position at the mouse and display it
-      // Could display biome later
-      // Could display ingame time, travaler task reset timer
-      // Could turn on an of with an optional checkbox
       const coordDisplay = document.getElementById('coords');
       map.on('mousemove', function (e) {
         const coords = readableCoordinates(e.latlng);
@@ -395,37 +392,24 @@
       });
 
       function loadGeoJsonFromHash() {
-        const hashFromUrl =
-          location.hash
-          .slice(1)              // Removing the "#"
-          .replace(/%20/g, ' ')  // Names can contain spaces
-          .replace(/%22/g, '"')  // We need " for json
-          .replace(/%7B/g, '{')  // sometimes discord remove these
-          .replace(/%7D/g, '}'); // sometimes discord remove these
-        if (!hashFromUrl) return; // No hash to load
-        const geoJson = JSON.parse(hashFromUrl);
-        if (Array.isArray(geoJson)) throw new Error('geoJson must not be an array');
+        const hashFromUrl = location.hash.slice(1);
+        if(!hashFromUrl) return;
+        const geoJson = validateGeoJson(hashFromUrl);
         paintGeoJson(geoJson);
       };
 
       async function loadGeoJsonFromGist() {
         const gistIdFromUrl = new URLSearchParams(window.location.search).get('gistId');
         if(!gistIdFromUrl || gistIdFromUrl.length > 50) return;
-        try {
-          const response = await fetch('https://gist.githubusercontent.com/' + gistIdFromUrl + '/raw');
-          const geoJson = await response.json();
-          console.log('geoJson :');
-          console.log(geoJson);
-          paintGeoJson(geoJson);
-        } catch(error) {
-          console.log(error);
-          return;
-        }
+        const response = await fetch('https://gist.githubusercontent.com/' + gistIdFromUrl + '/raw');
+        const content = await response.text()
+        const geoJson = validateGeoJson(content);
+        paintGeoJson(geoJson);
       };
 
       async function loadGeoJsonFromFile(fileUrl) {
         const file = await fetch(fileUrl);
-        const geoJson = await file.json();
+        const geoJson = validateGeoJson(file);
         paintGeoJson(geoJson);
       };
 
@@ -507,7 +491,7 @@
         }).addTo(waypointsLayer);
 
         map.addLayer(waypointsLayer);
-      }
+      };
 
       // Default layer to show on map opening
       treesLayer.addTo(map);
@@ -521,6 +505,54 @@
       L.control.layers(null, cavesToggle, { collapsed: false }).addTo(map);
       L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
 
+      function escapeHTML(string) {
+        return string
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#x27;");
+      };
+
+      function validateGeoJson(untrustedString) {
+        if (untrustedString.constructor.name !== 'String') {
+          throw new Error('untrustedString be a string');
+        }
+
+        const decodedString = decodeURI(untrustedString);
+        const jsonFormString = JSON.parse(decodedString);
+
+        if (Array.isArray(jsonFormString)) {
+          throw new Error('geoJson must not be an array');
+        }
+
+        if (jsonFormString.type !== 'FeatureCollection') {
+          throw new Error('Invalid geoJson');
+        }
+
+        if (!jsonFormString.features || !Array.isArray(jsonFormString.features)) {
+          throw new Error('Invalid geoJson');
+        }
+
+        for (const feature of jsonFormString.features) {
+
+          if (
+            Array.isArray(feature.properties?.popupText)
+            && feature.properties.popupText.every(value => value.constructor.name === 'String')
+          ) {
+            feature.properties.popupText.forEach((value, index, array) => {
+              array[index] = escapeHTML(value);
+            });
+          } else if (feature.properties.popupText.constructor.name === 'String') {
+            feature.properties.popupText = escapeHTML(feature.properties.popupText);
+          } else {
+            throw new Error('popupText must be string or array of strings');
+          }
+        }
+        console.log(jsonFormString)
+        return jsonFormString;
+      };
+
       // Load files
       loadTreesGeoJson();
       loadTemplesGeoJson();
@@ -529,12 +561,9 @@
       loadClaimsGeoJson();
 
       // Load from gist / load from hash
-      // We should validate GeoJson at this point (https://www.npmjs.com/package/@mapbox/geojsonhint ?)
-      // TODO: validate iconName from predefined list
-      // TODO: validate turnLayerOn and Off from predefined list
-
-      // loadGeoJsonFromGist();
+      loadGeoJsonFromGist();
       loadGeoJsonFromHash();
+
     </script>
   </body>
 </html>

@@ -144,3 +144,4 @@ https://bitcraftmap.com
 
 - https://genshin-impact-map.appsample.com/?map=teyvat
 - https://act.hoyolab.com/ys/app/interactive-map/index.html
+- https://www.npmjs.com/package/@mapbox/geojsonhint
