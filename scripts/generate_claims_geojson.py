@@ -51,7 +51,7 @@ for claim in all_claims:
     print('Requesting ' + buildings_endpoint + ' ' + str(counter) + ' left to do')
     claim['buildings'] = requests.get(buildings_endpoint, user_agent).json()
     all_claims_with_buildings.append(claim)
- 
+
 print('Counted ' + str(total_claims) + ' claims and there are ' + str(len(all_claims_with_buildings)) + ' total claims in the json file')
 
 with open(raw_claims_file, "w") as file:

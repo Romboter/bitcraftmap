@@ -26,8 +26,6 @@ https://bitcraftmap.com
 
 ## Wild ideas board
 
-- Turn on / Turn off all waypoint
-- New interface that follow bitcraft style
 - Pathfinder using terrain elevation data
 - Coordinates to biome calculator
 - Rewrite to Typescript
@@ -40,51 +38,54 @@ https://bitcraftmap.com
 - show list of opened job on the map
 - show dropped item on the map (lol)
 
+- User Intercae
+  - Turn on / Turn off all waypoint
+  - New interface that follow bitcraft style
+  - Options that allow you to draw on the map
+
 - Players data
-    - Show player waystone
-    - Show player missing waystones
-    - calculate 'closest known waystone' to a location
-    - Calculate player heat density zones
-    - Show players on the map dynamically
-    - See people exploration level in real time
+  - Show player waystone
+  - Show player missing waystones
+  - calculate 'closest known waystone' to a location
+  - Calculate player heat density zones
+  - Show players on the map dynamically
+  - See people exploration level in real time
 
 - Market data
-    - Show market data for each waypoints
-    - Best prices for this market [1/5/10 percentile of prices]
-    - Volume of the market calculated in number of orders, total buy order in hexcoins, other methods...
+  - Show market data for each waypoints
+  - Best prices for this market [1/5/10 percentile of prices]
+  - Volume of the market calculated in number of orders, total buy order in hexcoins, other methods...
 
 - Empires :
-    - Show empire borders
-    - Show watchtowers
-    - More info about watchtowers (expiration / war...)
-    - Show and search information related to empire (ex : search by empire name, number of tower)
-    - Make capital of empire stand out
+  - Show empire borders
+  - Show watchtowers
+  - More info about watchtowers (expiration / war...)
+  - Show and search information related to empire (ex : search by empire name, number of tower)
+  - Make capital of empire stand out
 
 - Misc :
-    - Show region names
-    - Show regions grid
-    - Show chunks grid
-    - bitcraft ingame time
-    - traveler quest reset timer
-    - user control of what icons are on top
-    - legends
-    - 3D scene to show resources as they are ingame
+  - Show region names
+  - Show regions grid
+  - Show chunks grid
+  - bitcraft ingame time
+  - traveler quest reset timer
+  - user control of what icons are on top
+  - legends
+  - 3D scene to show resources as they are ingame
 
 - Thoughs about a navigation algorithm
-    - input starting position or "locate me" from name
-    - input destination
-    - Do you want to use waystones ?
-    - How many energy do you have ?
-    - what do you want to carry ? (% of inventory ?)
-    - Does the user want to move cargo ?
-    - Calculate zones where its better to move around water than deploying a boat
-    - So we need list of deployable from the user
-    - calculate total time
+  - input starting position or "locate me" from name
+  - input destination
+  - Do you want to use waystones ?
+  - How many energy do you have ?
+  - what do you want to carry ? (% of inventory ?)
+  - Does the user want to move cargo ?
+  - Calculate zones where its better to move around water than deploying a boat
+  - So we need list of deployable from the user
+  - calculate total time
 
 - Navigation "addon"
-    - Find a way to display an overlaw over bitcraft to show an arrow when the user want to move to a destination
-
-
+  - Find a way to display an overlaw over bitcraft to show an arrow when the user want to move to a destination
 
 ## Pass geoJson with the location.hash
 
