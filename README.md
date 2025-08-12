@@ -37,6 +37,8 @@ https://bitcraftmap.com
 - "count" each filter
 - Save setting via cookie or local storage ?
 - Have a lexicon with resources screenshots
+- show list of opened job on the map
+- show dropped item on the map (lol)
 
 - Players data
     - Show player waystone
@@ -147,3 +149,27 @@ https://bitcraftmap.com
 - https://genshin-impact-map.appsample.com/?map=teyvat
 - https://act.hoyolab.com/ys/app/interactive-map/index.html
 - https://www.npmjs.com/package/@mapbox/geojsonhint
+
+## Generic info
+
+- Tiers
+    - 1:'#A0A0A0'
+    - 2:'#E8B57A'
+    - 3:'#A0D2B2'
+    - 4:'#3B60E4'
+    - 5:'#9C4A93'
+    - 6:'#B03A48'
+    - 7:'#EEDD7A'
+    - 8:'#4CA3A6'
+    - 9:'#3A3A3A'
+    - 10:'#BFD4E0'
+
+- How to get your token
+    - curl -X POST -vvv  https://api.bitcraftonline.com/authentication/request-access-code?email=[mail]
+    - curl -X POST -vvv  "https://api.bitcraftonline.com/authentication/authenticate?email=[mail]&accessCode=[code]"
+
+## Bounding box
+
+- https://gis.stackexchange.com/questions/76113/dynamically-set-zoom-level-based-on-a-bounding-box
+- https://www.google.com/search?sca_esv=9707cd9f776f091f&sxsrf=AE3TifOcCRxiLnqzwKz9qNlkRxzYF-QYNQ:1754167009955&udm=2&fbs=AIIjpHx4nJjfGojPVHhEACUHPiMQ_pbg5bWizQs3A_kIenjtcpTTqBUdyVgzq0c3_k8z34EAuM72an33lMW6RWde9ePJpwNFtZw3UQvFloZy04_0a2t90M1pjb-hlKRN5_Y-eT7ZEcVhb6tlz5ZvzwJfgnPcI9sO9tdtG4H8zxL-DrxbEkQcUjNRbZ70noEbDq9g2_ndCyCt&q=what+is+a+bounding+box+geojson&sa=X&ved=2ahUKEwjj-ISs_eyOAxUjfKQEHU9SBbUQtKgLegQIDxAB&biw=2122&bih=1018&dpr=1.25#vhid=02OhC2ONeqVqQM&vssid=mosaic
+- https://stackoverflow.com/questions/22948096/get-the-bounding-box-of-the-visible-leaflet-map

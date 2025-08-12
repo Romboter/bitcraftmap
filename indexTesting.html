@@ -42,7 +42,6 @@
 		<div id="coords"></div>
     <script>
 
-      // Documentation of my struggle with the map
       // When cropping the top of the image you will get a rectangle map. This is what we want but leaflet
       // Will retransform that rectangle to a square, whatever the value I put in widht and height
       // This looks bad
@@ -79,6 +78,9 @@
       //         bottom to top         left to right
       //               v                     v
       map.setView([bitcraftHeight/2, bitcraftWidth/2], -3);
+
+      const iconNames = [];
+      // Load icons from 
 
       function createMapIcon(iconUrl, iconConfig = [[32, 32],[16, 16],[0, -16]]) {
         return L.icon({
