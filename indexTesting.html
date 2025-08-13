@@ -419,6 +419,10 @@
         L.geoJSON(geoJson, {
           pointToLayer: function(feature, latlng) {
 
+            if (feature.properties.makeCanvas) {
+              return new L.CircleMarker(latlng, {radius: 1});
+            }
+
             map.createPane('markerOnTop');
             map.getPane('markerOnTop').style.zIndex = 999;
 

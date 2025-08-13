@@ -37,6 +37,9 @@ https://bitcraftmap.com
 - Have a lexicon with resources screenshots
 - show list of opened job on the map
 - show dropped item on the map (lol)
+- Optional : slice the map in 9
+- chunk coord ?
+- freeze coordinates information when clicking a waypoint
 
 - User Intercae
   - Turn on / Turn off all waypoint
@@ -62,6 +65,7 @@ https://bitcraftmap.com
   - More info about watchtowers (expiration / war...)
   - Show and search information related to empire (ex : search by empire name, number of tower)
   - Make capital of empire stand out
+  - Watchtower optimization algorithm
 
 - Misc :
   - Show region names
