@@ -1,5 +1,0 @@
-matplotlib
-numpy
-requests
-json
-opencv

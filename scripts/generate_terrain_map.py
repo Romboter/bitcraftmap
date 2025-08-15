@@ -1,56 +1,69 @@
 from PIL import Image, ImageOps
 import numpy as np
 import requests
-# import math
-# import cv2
+import gzip
+import shutil
+import math
+import cv2
 
-width = height = 2400
+width = 2400
+height = 2400
 pixel_size = 8 
+scale_factor = 3
+header_size = 8
+hex_size = 6
+expected_size = width * height * pixel_size
 
-# https://maps.game.bitcraftonline.com/world-maps/TerrainMap.gwm
+maps_url = 'https://maps.game.bitcraftonline.com/world-maps/'
+terrain_map_file = 'TerrainMap.gwm'
+terrain_map_file_unzip = 'TerrainMap.gwm.unc'
+terrain_map_file_png = 'TerrainMap.gwm.png'
+terrain_map_file_hexagon = 'TerrainMap.hex.png'
+data_folder = 'assets/data/'
+map_folder = 'assets/maps/'
 
-with open("TerrainMap.gwm.unc", "rb") as f:
+# Download and unzip the terrain map file
+response = requests.get(maps_url + terrain_map_file, stream=True)
+response.raise_for_status()
+
+with open(data_folder + terrain_map_file, "wb") as file:
+    for chunk in response.iter_content(chunk_size=8192):
+        if chunk:
+            file.write(chunk)
+
+with gzip.open(data_folder + terrain_map_file, "rb") as f_in:
+    with open(data_folder + terrain_map_file_unzip, "wb") as f_out:
+        shutil.copyfileobj(f_in, f_out)
+
+# Read the uncompressed terrain map file and convert it to PNG format
+with open(data_folder + terrain_map_file_unzip, "rb") as f:
     data = f.read()
 
-expected_size = width * height * pixel_size
-if len(data) < expected_size:
+pixel_data = data[header_size:]
+
+if len(pixel_data) < expected_size:
     raise ValueError("File too small for expected image size.")
-elif len(data) > expected_size:
-    data = data[:expected_size]  # Trim padding if any
+elif len(pixel_data) > expected_size:
+    pixel_data = pixel_data[:expected_size]  # Trim padding if any
 
 rgb_data = bytearray()
-for i in range(0, len(data), pixel_size):
-    b, g, r = data[i+1], data[i+2], data[i+3]
+for i in range(0, len(pixel_data), pixel_size):
+    b, g, r = pixel_data[i+1], pixel_data[i+2], pixel_data[i+3]
     rgb_data.extend([r, g, b]) 
 
 img_array = np.frombuffer(rgb_data, dtype=np.uint8).reshape((height, width, 3))
 
-# Crop was a good idea but leaflet transform rectangles map to squares...
-# crop_factor = 1.1547005 # magic number
-# crop_pixels = int(height / crop_factor)
-# img_array = img_array[:crop_pixels, :]
-
-img = Image.fromarray(img_array, 'RGB')
+img = Image.fromarray(img_array)
 img = ImageOps.mirror(img)
 img = img.rotate(180)
-
-scale_factor = 3
 img = img.resize((2400 * scale_factor, 2400 * scale_factor), resample=Image.NEAREST)
 
-img.save('TerrainMap.gwm.png')
-img.show()
+img.save(data_folder + terrain_map_file_png)
+#img.show()
 
-
-'''
-image_path = "reconstructed_rgb_image.png"        # Your input image file
-output_path = "reconstructed_rgb_image_hex.png"  # Output file
-hex_size = 20                   # Radius of hexagons
-
-# Load the image
-img = cv2.imread(image_path)
+# From square pixels to hexagonal pixels
+img = cv2.imread(data_folder + terrain_map_file_png)
 h, w = img.shape[:2]
-
-# Create a blank result image
 result = np.zeros_like(img)
 
 # Hexagon geometry
@@ -89,5 +102,4 @@ for y in np.arange(0, h + dy, dy):
         cv2.fillPoly(result, pts, color)
 
 # Save the output image
-cv2.imwrite(output_path, result)
-'''
+cv2.imwrite(data_folder + terrain_map_file_hexagon, result)
