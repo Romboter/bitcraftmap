@@ -11,6 +11,7 @@
 		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js" crossorigin=""></script>
 		<script src="assets/search/leaflet-search.src.js" crossorigin=""></script>
+    <script src="assets/images/manifest.js"></script>
 
 		<style>
       html, body {
@@ -49,19 +50,10 @@
 		<div id="coords"></div>
     <script>
 
-      // When cropping the top of the image you will get a rectangle map. This is what we want but leaflet
-      // Will retransform that rectangle to a square, whatever the value I put in widht and height
-      // This looks bad
-      // However if I load the map with the added ocean at the top, the coordinate system will be screwed
-      // Conclusion, We multiply the height by the hexagon ratio to get what would be the real height with added ocean
-
-      // The image itself is this size in pixel
 			const imageWidth = 2400;
 			const imageHeight = 2400;
-
-      // Objects in Bitcraft are positionned with coordinates from 0 to 23040
       const bitcraftWidth = 23040;  
-      const bitcraftHeight = 23040 * 1.1547005; // Extra ocean on top
+      const bitcraftHeight = 23040 * 1.1547005;
 
       const map = L.map('map', {
         crs: L.CRS.Simple,
@@ -74,8 +66,6 @@
         boxZoom: false
       });
 
-      // When placing a marker on the map we will use this 0-23040 system
-      // The extra 1.15 we added doesnt mater, nothing will be placed there
       const mapBounds = [[0, 0], [bitcraftHeight, bitcraftWidth]];
       L.imageOverlay('assets/maps/map.png', mapBounds).addTo(map);
 
@@ -86,12 +76,28 @@
       //               v                     v
       map.setView([bitcraftHeight/2, bitcraftWidth/2], -3);
 
-      const iconNames = [];
-      // Load icons from 
+      // Overwriting the default icon parameters
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        "iconUrl": iconsManifest['Hex_Logo'],
+        "iconRetinaUrl": iconsManifest['Hex_Logo'],
+        "iconSize": [28,28],
+        "iconAnchor": [14,14],
+        "popupAnchor": [0,-14],
+        "tooltipAnchor": [-14,0],
+        "shadowUrl": null,
+        "shadowSize": null,
+        "shadowAnchor": null,
+        "shadowRetinaUrl": null
+      });
+
+      smallSizeIcon = [[26, 26],[13, 13],[0, -13]];
+      mediumSizeIcon = [[44, 44],[22, 22],[0, -22]];
+      largeSizeIcon = [[50, 50],[25, 25],[0, -25]];
 
       function createMapIcon(iconUrl, iconConfig = [[32, 32],[16, 16],[0, -16]]) {
         return L.icon({
-          iconUrl: iconUrl,
+          iconUrl: iconUrl || iconsManifest['Hex_Logo'],
           iconSize: iconConfig[0],
           iconAnchor: iconConfig[1],
           popupAnchor: iconConfig[2],
@@ -101,40 +107,36 @@
         });
       };
 
-      smallSizeIcon = [[26, 26],[13, 13],[0, -13]];
-      mediumSizeIcon = [[44, 44],[22, 22],[0, -22]];
-      largeSizeIcon = [[50, 50],[25, 25],[0, -25]];
-
       const caveIcons = [
-        createMapIcon('assets/images/ore/t1.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t2.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t3.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t4.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t5.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t6.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t7.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t8.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t9.png', smallSizeIcon),
-        createMapIcon('assets/images/ore/t10.png', smallSizeIcon)
+        createMapIcon(iconsManifest['t1']),
+        createMapIcon(iconsManifest['t2']),
+        createMapIcon(iconsManifest['t3']),
+        createMapIcon(iconsManifest['t4']),
+        createMapIcon(iconsManifest['t5']),
+        createMapIcon(iconsManifest['t6']),
+        createMapIcon(iconsManifest['t7']),
+        createMapIcon(iconsManifest['t8']),
+        createMapIcon(iconsManifest['t9']),
+        createMapIcon(iconsManifest['t10'])
       ];
 
       const claimIcons = [
-        createMapIcon('assets/images/claim/t0.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t1.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t2.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t3.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t4.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t5.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t6.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t7.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t8.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t9.png', mediumSizeIcon),
-        createMapIcon('assets/images/claim/t10.png', mediumSizeIcon)
+        createMapIcon(iconsManifest['claimT0']),
+        createMapIcon(iconsManifest['claimT1']),
+        createMapIcon(iconsManifest['claimT2']),
+        createMapIcon(iconsManifest['claimT3']),
+        createMapIcon(iconsManifest['claimT4']),
+        createMapIcon(iconsManifest['claimT5']),
+        createMapIcon(iconsManifest['claimT6']),
+        createMapIcon(iconsManifest['claimT7']),
+        createMapIcon(iconsManifest['claimT8']),
+        createMapIcon(iconsManifest['claimT9']),
+        createMapIcon(iconsManifest['claimT10'])
       ];
 
-      const ruinedIcon = createMapIcon('assets/images/claim/ruined.png', mediumSizeIcon);
-      const templeIcon = createMapIcon('assets/images/poi/temple.svg');
-      const treeIcon = createMapIcon('assets/images/poi/tree.svg');
+      const ruinedIcon = createMapIcon(iconsManifest['ruinedCity']);
+      const templeIcon = createMapIcon(iconsManifest['temple']);
+      const treeIcon = createMapIcon(iconsManifest['travelerTree']);
 
       const treesLayer = L.layerGroup();
       const ruinedLayer = L.layerGroup();
@@ -451,12 +453,7 @@
 
             map.createPane('markerOnTop');
             map.getPane('markerOnTop').style.zIndex = 999;
-
-            let iconPath = 'assets/icons/waypoint.png';
-            if (feature.properties?.iconName) {
-              iconPath = 'assets/icons/' + feature.properties.iconName + '.png';
-            }
-            const waypointIcon = createMapIcon(iconPath, mediumSizeIcon);
+            const waypointIcon = createMapIcon('assets/icons/waypoint.png', mediumSizeIcon);
 
             return L.marker(
               latlng,
@@ -515,7 +512,7 @@
 
             if (feature.properties?.flyTo && feature.properties?.zoomTo) {
               map.flyTo(feature.properties.flyTo, feature.properties.zoomTo);
-            } else if (layer?.getBounds) {
+            } else if (layer?.getBounds && !feature.properties.noPan) {
               map.fitBounds(layer.getBounds());
             }
           }

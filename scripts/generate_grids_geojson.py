@@ -42,6 +42,7 @@ geojson = {
         {
             "type": "Feature",
             "properties": {
+                "noPan": 1,
                 "color": "#737070",
                 "weight": 0.40,
                 "opacity": 1,
@@ -54,6 +55,7 @@ geojson = {
         {
             "type": "Feature",
             "properties": {
+                "noPan": 1,
                 "color": "#000000",
                 "weight": 2,
                 "opacity": 1,
@@ -63,15 +65,15 @@ geojson = {
                 "coordinates": regions_lines
             }
         },
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Calenthyr"}, "geometry": {"type": "Point", "coordinates": [3840, 7680]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Oruvale"}, "geometry": {"type": "Point", "coordinates": [11520, 7680]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Veltrassa"}, "geometry": {"type": "Point", "coordinates": [19200, 7680]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Solvenar"}, "geometry": {"type": "Point", "coordinates": [3840, 15360]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Marundel"}, "geometry": {"type": "Point", "coordinates": [11520, 15360]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Tessavar"}, "geometry": {"type": "Point", "coordinates": [19200, 15360]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Elyvarin"}, "geometry": {"type": "Point", "coordinates": [3840, 23040]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Draxionne"}, "geometry": {"type": "Point", "coordinates": [11520, 23040]}},
-        {"type": "Feature", "properties": {"type":"tooltip","popupText":"Zepharel"}, "geometry": {"type": "Point", "coordinates": [19200, 23040]}}
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Calenthyr"}, "geometry": {"type": "Point", "coordinates": [3840, 7680]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Oruvale"}, "geometry": {"type": "Point", "coordinates": [11520, 7680]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Veltrassa"}, "geometry": {"type": "Point", "coordinates": [19200, 7680]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Solvenar"}, "geometry": {"type": "Point", "coordinates": [3840, 15360]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Marundel"}, "geometry": {"type": "Point", "coordinates": [11520, 15360]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Tessavar"}, "geometry": {"type": "Point", "coordinates": [19200, 15360]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Elyvarin"}, "geometry": {"type": "Point", "coordinates": [3840, 23040]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Draxionne"}, "geometry": {"type": "Point", "coordinates": [11520, 23040]}},
+        {"type": "Feature", "properties": {"type":"tooltip","noPan": 1,"popupText":"Zepharel"}, "geometry": {"type": "Point", "coordinates": [19200, 23040]}}
     ]
 }
 

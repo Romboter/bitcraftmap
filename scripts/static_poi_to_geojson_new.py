@@ -9,16 +9,16 @@ geojson = {
 }
 
 properties = {
-    'Ferralith': {"tier": 1, "iconName": "something"},
-    'Pyrelite': {"tier": 2, "iconName": "something"},
-    'Emarium': {"tier": 3, "iconName": "something"},
-    'Elenvar': {"tier": 4, "iconName": "something"},
-    'Luminite': {"tier": 5, "iconName": "something"},
-    'Rathium': {"tier": 6, "iconName": "something"},
-    'Aurumite': {"tier": 7, "iconName": "something"},
-    'Celestium': {"tier": 8, "iconName": "something"},
-    'Umbracite': {"tier": 9, "iconName": "something"},
-    'Astralite': {"tier": 10, "iconName": "something"},
+    'Ferralith': {"tier": 1, "iconName": "t1"},
+    'Pyrelite': {"tier": 2, "iconName": "t2"},
+    'Emarium': {"tier": 3, "iconName": "t3"},
+    'Elenvar': {"tier": 4, "iconName": "t4"},
+    'Luminite': {"tier": 5, "iconName": "t5"},
+    'Rathium': {"tier": 6, "iconName": "t6"},
+    'Aurumite': {"tier": 7, "iconName": "t7"},
+    'Celestium': {"tier": 8, "iconName": "t8"},
+    'Umbracite': {"tier": 9, "iconName": "t9"},
+    'Astralite': {"tier": 10, "iconName": "t10"},
 
     'First': {"tier": 1, "iconName": "temple"},
     'Second': {"tier": 2, "iconName": "temple"},
@@ -33,8 +33,8 @@ def get_property_from_name(name):
     for keyword, property in properties.items():
         if keyword in name:
             return property.update({"popupText:": name})
-        else:
-            return {"tier": 1, "iconName": "ruinedCity", "popupText:": name}
+        
+    return {"tier": 1, "iconName": "ruinedCity", "popupText:": name}
 
 def get_size_from_cave_name(name):
     return 2 if 'Large' in name else 1
