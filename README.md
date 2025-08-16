@@ -20,7 +20,9 @@ https://bitcraftmap.com
 ## Roadmap
 
 0 rewrite code to have generic geoJson
+
 1 Sort icons, make icon list and layer list for validation
+0.1 0.2 : move coordinate finder + coordinate a mouse cursor + coordinate and biome finder
 2 Work on user interface
 3 make the higher resolution hexagon map with opencv and numpy
 
@@ -53,6 +55,7 @@ https://bitcraftmap.com
   - Calculate player heat density zones
   - Show players on the map dynamically
   - See people exploration level in real time
+  - Crazy idea : live map of all players, and text bubble above them that show what they say (lol)
 
 - Market data
   - Show market data for each waypoints

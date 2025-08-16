@@ -436,10 +436,7 @@
             if (feature.properties?.type === 'tooltip') {
               return new L.popup(
                 latlng,
-                {
-                  autoPan: false,
-                  autoClose: false,
-                }
+                {autoPan: false, autoClose: false}
               ).setContent(feature.properties.popupText);
             }
 
@@ -453,6 +450,7 @@
 
             map.createPane('markerOnTop');
             map.getPane('markerOnTop').style.zIndex = 999;
+
             const waypointIcon = createMapIcon('assets/icons/waypoint.png', mediumSizeIcon);
 
             return L.marker(
