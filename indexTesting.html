@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Bitcraft Game Map</title>
-    <link rel="icon" type="image/x-icon" href="assets/icons/MapCompass.png">
+		<title>BitCraft Map</title>
+
+    <meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Game map for Bicraft Online game">
 
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-		<link rel="stylesheet" href="assets/search/leaflet-search.src.css" crossorigin=""/>
+    <link rel="icon" href="assets/images/other/Hex_Logo.svg" type="image/svg+xml">
+    <link rel="canonical" href="https://bitcraftmap.com/" />
 
-		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script src="https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js" crossorigin=""></script>
-		<script src="assets/search/leaflet-search.src.js" crossorigin=""></script>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="anonymous"/>
+		<link rel="stylesheet" href="assets/search/leaflet-search.src.css" crossorigin="anonymous"/>
+
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="anonymous"></script>
+		<script src="assets/search/leaflet-search.src.js"></script>
     <script src="assets/images/manifest.js"></script>
 
 		<style>
@@ -38,9 +42,8 @@
       .leaflet-tile,
       .leaflet-image-layer,
       .pixelated {
-        image-rendering: pixelated;      /* most browsers */
-        image-rendering: crisp-edges;    /* fallback */
-        -ms-interpolation-mode: nearest-neighbor; /* old IE */
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
       }
     </style>
 	</head>
@@ -81,26 +84,43 @@
       L.Icon.Default.mergeOptions({
         "iconUrl": iconsManifest['Hex_Logo'],
         "iconRetinaUrl": iconsManifest['Hex_Logo'],
-        "iconSize": [28,28],
-        "iconAnchor": [14,14],
-        "popupAnchor": [0,-14],
-        "tooltipAnchor": [-14,0],
+        "iconSize": [32,32],
+        "iconAnchor": [16,16],
+        "popupAnchor": [0,-16],
+        "tooltipAnchor": [-16,0],
         "shadowUrl": null,
         "shadowSize": null,
         "shadowAnchor": null,
         "shadowRetinaUrl": null
       });
 
-      smallSizeIcon = [[26, 26],[13, 13],[0, -13]];
-      mediumSizeIcon = [[44, 44],[22, 22],[0, -22]];
-      largeSizeIcon = [[50, 50],[25, 25],[0, -25]];
+      function createIcon(iconName = 'Hex_Logo', iconSize = [32,32]) {
 
-      function createMapIcon(iconUrl, iconConfig = [[32, 32],[16, 16],[0, -16]]) {
+        // This need to be moved to the generic validator function
+        // do iconUrl check
+        // Must exist
+        // must be string, must only contain letter 
+        // must exist in the manifest
+        if (!iconName){}
+        if (iconName.constructor.name !== 'String'){}
+        if (iconName in iconsManifest === false){}
+        // do iconSize type check
+        // Must be array 
+        // must be integer or float
+        // Must be of len 2
+        // Not bigger than X
+        if (!iconSize){}
+        if (iconSize.constructor.name !== 'Array'){}
+        // If fails, just return a default icon
+
+        // Static values for the moment
+        iconSize = [32, 32];
+
         return L.icon({
-          iconUrl: iconUrl || iconsManifest['Hex_Logo'],
-          iconSize: iconConfig[0],
-          iconAnchor: iconConfig[1],
-          popupAnchor: iconConfig[2],
+          iconUrl: iconsManifest[iconName],
+          iconSize: iconSize,
+          iconAnchor: [iconSize[0]/2, iconSize[1]/2],
+          popupAnchor: [0, -iconSize[1]/2],
           shadowUrl: null,
           shadowSize: null,
           shadowAnchor: null
@@ -108,35 +128,18 @@
       };
 
       const caveIcons = [
-        createMapIcon(iconsManifest['t1']),
-        createMapIcon(iconsManifest['t2']),
-        createMapIcon(iconsManifest['t3']),
-        createMapIcon(iconsManifest['t4']),
-        createMapIcon(iconsManifest['t5']),
-        createMapIcon(iconsManifest['t6']),
-        createMapIcon(iconsManifest['t7']),
-        createMapIcon(iconsManifest['t8']),
-        createMapIcon(iconsManifest['t9']),
-        createMapIcon(iconsManifest['t10'])
+        createIcon('t1'),createIcon('t2'),createIcon('t3'),createIcon('t4'),createIcon('t5'),
+        createIcon('t6'),createIcon('t7'),createIcon('t8'),createIcon('t9'),createIcon('t10')
       ];
 
       const claimIcons = [
-        createMapIcon(iconsManifest['claimT0']),
-        createMapIcon(iconsManifest['claimT1']),
-        createMapIcon(iconsManifest['claimT2']),
-        createMapIcon(iconsManifest['claimT3']),
-        createMapIcon(iconsManifest['claimT4']),
-        createMapIcon(iconsManifest['claimT5']),
-        createMapIcon(iconsManifest['claimT6']),
-        createMapIcon(iconsManifest['claimT7']),
-        createMapIcon(iconsManifest['claimT8']),
-        createMapIcon(iconsManifest['claimT9']),
-        createMapIcon(iconsManifest['claimT10'])
+        createIcon('claimT0'),createIcon('claimT1'),createIcon('claimT2'),createIcon('claimT3'),createIcon('claimT4'),createIcon('claimT5'),
+        createIcon('claimT6'),createIcon('claimT7'),createIcon('claimT8'),createIcon('claimT9'),createIcon('claimT10')
       ];
 
-      const ruinedIcon = createMapIcon(iconsManifest['ruinedCity']);
-      const templeIcon = createMapIcon(iconsManifest['temple']);
-      const treeIcon = createMapIcon(iconsManifest['travelerTree']);
+      const ruinedIcon = createIcon('ruinedCity');
+      const templeIcon = createIcon('temple');
+      const treeIcon = createIcon('travelerTree');
 
       const treesLayer = L.layerGroup();
       const ruinedLayer = L.layerGroup();
@@ -201,7 +204,6 @@
       };
 
       const claimsTierToggle = {
-        "Claims T0": claimT0Layer,
         "Claims T1": claimT1Layer,
         "Claims T2": claimT2Layer,
         "Claims T3": claimT3Layer,
@@ -232,8 +234,7 @@
       };
 
       const allLayers = {
-        treesLayer, templesLayer, ruinedLayer, banksLayer,
-        marketsLayer, waystonesLayer, waypointsLayer,
+        treesLayer, templesLayer, ruinedLayer, banksLayer, marketsLayer, waystonesLayer, waypointsLayer,
         claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
         claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
         caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
@@ -392,8 +393,8 @@
       // Function to convert to N E coordinate people know about
       function readableCoordinates(latlng) {
         return [
-          Math.round(latlng.lat / 23040 * 7676),
-          Math.round(latlng.lng / 23040 * 7676)
+          Math.round(latlng.lat / 3),
+          Math.round(latlng.lng / 3)
         ]; 
       };
       
@@ -451,7 +452,7 @@
             map.createPane('markerOnTop');
             map.getPane('markerOnTop').style.zIndex = 999;
 
-            const waypointIcon = createMapIcon('assets/icons/waypoint.png', mediumSizeIcon);
+            const waypointIcon = createIcon('waypoint');
 
             return L.marker(
               latlng,

@@ -12,6 +12,10 @@ const iconsManifest = {
   "claimT8": "assets/images/claim/claimT8.png",
   "claimT9": "assets/images/claim/claimT9.png",
   "ruinedCity": "assets/images/claim/ruinedCity.png",
+  "HexCoin": "assets/images/coin/HexCoin.png",
+  "HexCoin10": "assets/images/coin/HexCoin10.png",
+  "HexCoin3": "assets/images/coin/HexCoin3.png",
+  "HexCoin500": "assets/images/coin/HexCoin500.png",
   "t1": "assets/images/ore/t1.png",
   "t10": "assets/images/ore/t10.png",
   "t2": "assets/images/ore/t2.png",
@@ -24,5 +28,7 @@ const iconsManifest = {
   "t9": "assets/images/ore/t9.png",
   "Hex_Logo": "assets/images/other/Hex_Logo.svg",
   "temple": "assets/images/other/temple.svg",
-  "travelerTree": "assets/images/other/travelerTree.svg"
+  "travelerTree": "assets/images/other/travelerTree.svg",
+  "waypoint": "assets/images/other/waypoint.png",
+  "search-icon": "assets/images/search-icon.png"
 };
