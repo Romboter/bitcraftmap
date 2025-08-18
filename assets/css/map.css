@@ -1,0 +1,27 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+#map {
+    height: 100vh;
+    width: 100%;
+    background-color: #2a3145;
+}
+#coords {
+position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: white;
+    padding: 5px 10px;
+    z-index: 1000;
+    font-family: monospace;
+    border-radius:.25em;
+}
+.leaflet-tile,
+.leaflet-image-layer,
+.pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
