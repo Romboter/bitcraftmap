@@ -46,36 +46,16 @@ L.Icon.Default.mergeOptions({
 });
 
 function createIcon(iconName = 'Hex_Logo', iconSize = [32,32]) {
-
-// This need to be moved to the generic validator function
-// do iconUrl check
-// Must exist
-// must be string, must only contain letter 
-// must exist in the manifest
-if (!iconName){}
-if (iconName.constructor.name !== 'String'){}
-if (iconName in iconsManifest === false){}
-// do iconSize type check
-// Must be array 
-// must be integer or float
-// Must be of len 2
-// Not bigger than X
-if (!iconSize){}
-if (iconSize.constructor.name !== 'Array'){}
-// If fails, just return a default icon
-
-// Static values for the moment
-iconSize = [32, 32];
-
-return L.icon({
-    iconUrl: iconsManifest[iconName],
-    iconSize: iconSize,
-    iconAnchor: [iconSize[0]/2, iconSize[1]/2],
-    popupAnchor: [0, -iconSize[1]/2],
-    shadowUrl: null,
-    shadowSize: null,
-    shadowAnchor: null
-});
+    const [w = 32, h = 32] = iconSize || [];
+    return L.icon({
+        iconUrl: iconsManifest[iconName],
+        iconSize: [w, h],
+        iconAnchor: [w/2, h/2],
+        popupAnchor: [0, -h/2],
+        shadowUrl: null,
+        shadowSize: null,
+        shadowAnchor: null
+    });
 };
 
 const caveIcons = [
@@ -343,42 +323,70 @@ L.geoJSON(geojsonData, {
 
 // Function to convert to N E coordinate people know about
 function readableCoordinates(latlng) {
-return [
-    Math.round(latlng.lat / 3),
-    Math.round(latlng.lng / 3)
-]; 
+    return [Math.round(latlng.lat / 3), Math.round(latlng.lng / 3)]; 
 };
 
 // Bit of code to get the position at the mouse and display it
-const coordDisplay = document.getElementById('coords');
 map.on('mousemove', function (e) {
-const coords = readableCoordinates(e.latlng);
-coordDisplay.innerText = 'N: ' + coords[0] + ' E: ' + coords[1];
+    const coordDisplay = document.getElementById('coords');
+    const coords = readableCoordinates(e.latlng);
+    coordDisplay.innerText = 'N: ' + coords[0] + ' E: ' + coords[1];
 });
 
 function loadGeoJsonFromHash() {
-const hashFromUrl = location.hash.slice(1);
-if(!hashFromUrl) return;
-const geoJson = validateGeoJson(hashFromUrl);
-paintGeoJson(geoJson, waypointsLayer);
-map.addLayer(waypointsLayer);
+    const hashFromUrl = location.hash.slice(1);
+    if(!hashFromUrl) return;
+    const geoJson = validateGeoJson(hashFromUrl);
+    paintGeoJson(geoJson, waypointsLayer);
+    map.addLayer(waypointsLayer);
+};
+
+async function getLatestGistRaw(gistId) {
+    if (!/^[a-fA-F0-9]{32}$/.test(gistId)) {
+        throw new Error('gistId is invalid');
+    };
+    const baseApi = 'https://api.github.com/gists/';
+    let lastGistCommitVersion;
+    try {
+        const gistCommits = await fetch(baseApi + gistId + '/commits');
+        const gistCommitsJson = await gistCommits.json();
+        if (!Array.isArray(gistCommitsJson) || gistCommitsJson.length === 0) {
+            throw new Error('No commits found for this gist');
+        }
+        lastGistCommitVersion = gistCommitsJson[0].version;
+    } catch (error) { console.log(error); } 
+    let lastGistRawUrl;
+    try {
+        const gistInfo = await fetch(baseApi + gistId + '/' + lastGistCommitVersion);
+        const gistInfoJson = await gistInfo.json();
+        const filesNames = gistInfoJson.files || {};
+        if (filesNames.length === 0) {
+            throw new Error('No files found in this gist');
+        } 
+        lastGistRawUrl = Object.values(filesNames)[0].raw_url;
+    } catch (error) { console.log(error); }
+    let gistContent;
+    try {
+        const gistContentRaw = await fetch(lastGistRawUrl);
+        gistContent = await gistContentRaw.text();
+    } catch (error) { console.log(error); }
+    return gistContent;
 };
 
 async function loadGeoJsonFromGist() {
-const gistIdFromUrl = new URLSearchParams(window.location.search).get('gistId');
-if(!gistIdFromUrl || gistIdFromUrl.length > 50) return;
-const response = await fetch('https://gist.githubusercontent.com/' + gistIdFromUrl + '/raw');
-const content = await response.text()
-const geoJson = validateGeoJson(content);
-paintGeoJson(geoJson, waypointsLayer);
-map.addLayer(waypointsLayer);
+    const gistIdFromUrl = new URLSearchParams(window.location.search).get('gistId');
+    if(!gistIdFromUrl) return;
+    const gistContent = await getLatestGistRaw(gistIdFromUrl)
+    const geoJson = validateGeoJson(gistContent);
+    paintGeoJson(geoJson, waypointsLayer);
+    map.addLayer(waypointsLayer);
 };
 
 async function loadGeoJsonFromFile(fileUrl) {
-const file = await fetch(fileUrl);
-const content = await file.text()
-const geoJson = validateGeoJson(content);
-paintGeoJson(geoJson, gridsLayer);
+    const file = await fetch(fileUrl);
+    const content = await file.text()
+    const geoJson = validateGeoJson(content);
+    paintGeoJson(geoJson, gridsLayer);
 };
 
 function paintGeoJson(geoJson, layer) {
@@ -482,49 +490,87 @@ L.control.layers(null, cavesToggle, { collapsed: false }).addTo(map);
 L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
 
 function escapeHTML(string) {
-return string
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#x27;");
+    return string
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;");
 };
 
 function validateGeoJson(untrustedString) {
-if (untrustedString.constructor.name !== 'String') {
-    throw new Error('untrustedString be a string');
-}
 
-const decodedString = decodeURI(untrustedString);
-const jsonFormString = JSON.parse(decodedString);
-
-if (Array.isArray(jsonFormString)) {
-    throw new Error('geoJson must not be an array');
-}
-
-if (jsonFormString.type !== 'FeatureCollection') {
-    throw new Error('geoJson doesnt have FeatureCollection');
-}
-
-if (!jsonFormString.features || !Array.isArray(jsonFormString.features)) {
-    throw new Error('geoJson doesnt have features or features isnt array');
-}
-
-for (const feature of jsonFormString.features) {
-    if (feature.properties?.popupText) {
-    if (
-        Array.isArray(feature.properties.popupText)
-        && feature.properties.popupText.every(value => value.constructor.name === 'String')
-    ) {
-        feature.properties.popupText = feature.properties.popupText.map(escapeHTML);
-    } else if (feature.properties.popupText.constructor.name === 'String') {
-        feature.properties.popupText = escapeHTML(feature.properties.popupText);
-    } else {
-        throw new Error('popupText must be string or array of strings');
+    if (untrustedString.constructor.name !== 'String') {
+        throw new Error('untrustedString be a string');
     }
+
+    let decodedString;
+    try { decodedString = decodeURIComponent(untrustedString); }
+    catch { throw new Error('Bad URI encoding'); }
+
+    let jsonFormString;
+    try { jsonFormString = JSON.parse(decodedString); }
+    catch { throw new Error('Invalid JSON'); }
+
+    if (Array.isArray(jsonFormString)) {
+        throw new Error('geoJson must not be an array');
     }
-}
-return jsonFormString;
+
+    if (jsonFormString.type !== 'FeatureCollection') {
+        throw new Error('geoJson doesnt have FeatureCollection');
+    }
+
+    if (!jsonFormString.features || !Array.isArray(jsonFormString.features)) {
+        throw new Error('geoJson doesnt have features or features isnt array');
+    }
+
+    for (const feature of jsonFormString.features) {
+
+        if (feature.properties?.iconName) {
+            // iconName must be a string
+            if (feature.properties.iconName.constructor.name !== 'String') {
+                feature.properties.iconName = 'waypoint';
+            }
+
+            // iconName must be present in the iconsManifest list
+            if (feature.properties.iconName in iconsManifest === false) {
+                feature.properties.iconName = 'waypoint';
+            }
+        }
+
+        if (feature.properties?.iconSize) {
+            // Check if icon size is an array 
+            if (!Array.isArray(feature.properties.iconSize)) {
+                feature.properties.iconSize = [32,32];
+            }
+
+            // Icon size need to be an array of length 2
+            if (feature.properties.iconSize.length !== 2) {
+                feature.properties.iconSize = [32,32];
+            }
+
+            // Check if we have numbers in the array
+            if (!feature.properties.iconSize.every(value => value.constructor.name === 'Number')) {
+                feature.properties.iconSize = [32,32];
+            }
+        }
+
+        if (feature.properties?.popupText) {
+            if (
+                Array.isArray(feature.properties.popupText)
+                && feature.properties.popupText.every(
+                    value => value.constructor.name === 'String'
+                )
+            ) {
+                feature.properties.popupText = feature.properties.popupText.map(escapeHTML);
+            } else if (feature.properties.popupText.constructor.name === 'String') {
+                feature.properties.popupText = escapeHTML(feature.properties.popupText);
+            } else {
+                throw new Error('popupText must be string or array of strings');
+            }
+        }
+    }
+    return jsonFormString;
 };
 
 // Load files

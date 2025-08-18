@@ -2,7 +2,6 @@ from collections import defaultdict
 import json
 
 poi_json_file = 'assets/data/caves.json'
-grouped = defaultdict(list)
 geojson = {
     "type": "FeatureCollection",
     "features": []
@@ -37,27 +36,21 @@ def get_property_from_name(name):
             print('sending ' + str(property))
             return property.update({'test':'testeza'})
 
-def get_size_from_cave_name(name):
+def get_cave_size_from_name(name):
     return 2 if 'Large' in name else 1
+
+def generate_poi_geojson(json_key):
+    properties = get_property_from_name(json_key['name'])
+    return {
+        "type": "Feature",
+        "properties": properties,
+        "geometry": {
+            "type": "Point",
+            "coordinates": [json_key['locationX'], json_key['locationZ']]
+        }
+    }
 
 with open(poi_json_file, 'r', encoding='utf-8') as file:
     data = json.load(file)
-
-for item in data:
-    grouped[item["name"]].append([item["location"]["x"], item["location"]["z"]])
-
-for name, coords in grouped.items():
-    feature = {
-        "type": "Feature",
-        "properties": get_property_from_name(name),
-        "geometry": {
-            "type": "MultiPoint" if len(coords) > 1 else "Point",
-            "coordinates": coords if len(coords) > 1 else coords[0]
-        }
-    }
-    geojson["features"].append(feature)
-
-
-
 
 # print(json.dumps(geojson))
