@@ -395,16 +395,16 @@ L.geoJSON(geoJson, {
 
     if (feature.properties?.type === 'tooltip') {
         return new L.popup(
-        latlng,
-        {autoPan: false, autoClose: false}
+            latlng,
+            {autoPan: false, autoClose: false}
         ).setContent(feature.properties.popupText);
     }
 
     if (feature.properties?.makeCanvas) {
-        if (feature.properties.ragius) {
-        return new L.CircleMarker(latlng, {radius: feature.properties.ragius});
+        if (feature.properties?.radius) {
+            return new L.CircleMarker(latlng, {radius: feature.properties.radius});
         } else {
-        return new L.CircleMarker(latlng, {radius: 1});
+            return new L.CircleMarker(latlng, {radius: 1});
         } 
     }
 
@@ -504,11 +504,13 @@ function validateGeoJson(untrustedString) {
         throw new Error('untrustedString be a string');
     }
 
+    console.log(untrustedString)
     let decodedString;
     try { decodedString = decodeURIComponent(untrustedString); }
     catch { throw new Error('Bad URI encoding'); }
 
     let jsonFormString;
+    console.log(decodedString)
     try { jsonFormString = JSON.parse(decodedString); }
     catch { throw new Error('Invalid JSON'); }
 

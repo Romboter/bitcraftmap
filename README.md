@@ -1,183 +1,154 @@
-## 🗺️
-https://bitcraftmap.com
+# What is this ?
 
-## Things I found
+This is the source repository for [BitCraft Map 🗺️](https://bitcraftmap.com)
 
-- https://msgpack.org/
-- https://geojson.org/
-    - https://medium.com/@dmitry.sobolevsky/geojson-tutorial-for-beginners-ce810d3ff169
-    - https://leafletjs.com/examples/geojson/
-    - https://geojsonlint.com/
-- https://h3geo.org/
-- https://d3js.org/
-    - https://d3-graph-gallery.com/graph/hexbinmap_geo_basic.html
-    - https://www.visualcinnamon.com/2013/07/self-organizing-maps-creating-hexagonal/
-    - https://www.visualcinnamon.com/2013/07/self-organizing-maps-adding-boundaries/
-- https://p5js.org/
-- https://docs.mapbox.com/mapbox-gl-js/api/
-- https://github.com/mapbox/geobuf
+## Overview — Documentation
 
-## Roadmap
+This file explains how the map is built, how data is loaded, and how you can, as a user, share waypoints with people.
 
-0 rewrite code to have generic geoJson
+- **Tech**: [Leaflet](https://leafletjs.com/) and the [leaflet-control-search](https://github.com/stefanocudini/leaflet-search) plugin.
+- **Map Image**: `assets/maps/map.png` rendered over a [simple CRS map](https://leafletjs.com/examples/crs-simple/crs-simple.html) with custom bounds. This image is generated from BitCraft files.
+- **Coordinate System**: The map will accept "Small Hex" coordinates (see F4 debug menu ingame) Small hex coordinates range from 0 to 23040 and are the location X and location Z you get from the database. The map will also accept Small Floating Hex coordinates (case for players and animals).
+- **Search Plugin**: the search control plugin will look into **ruined cities** and **claims** layers, using the claim name as the searchable text.
+- **Feature to share waypoints**: Share waypoints and shapes by writing GeoJSON.
 
-1 Sort icons, make icon list and layer list for validation
-0.1 0.2 : move coordinate finder + coordinate a mouse cursor + coordinate and biome finder
-2 Work on user interface
-3 make the higher resolution hexagon map with opencv and numpy
+## Feature — Custom Markers
 
-## Wild ideas board
+You can add your **own markers and shapes** to the map by supplying a GeoJSON object. There are two ways of supplying the GeoJSON object.
 
-- Pathfinder using terrain elevation data
-- Coordinates to biome calculator
-- Rewrite to Typescript
-- Query the database instead of getting data from bitjita
-- Calculate walkable zones (ie where cart can go because there is no water)
-- Do a community map instead of a spoiler map at launch
-- "count" each filter
-- Save setting via cookie or local storage ?
-- Have a lexicon with resources screenshots
-- show list of opened job on the map
-- show dropped item on the map (lol)
-- Optional : slice the map in 9
-- chunk coord ?
-- freeze coordinates information when clicking a waypoint
+### What is GeoJSON ?
 
-- User Intercae
-  - Turn on / Turn off all waypoint
-  - New interface that follow bitcraft style
-  - Options that allow you to draw on the map
+[GeoJSON](https://datatracker.ietf.org/doc/html/rfc7946) is an open standard format for representing geographical features as JSON.  
+It defines simple geometries like **points**, **lines**, and **polygons**, grouped inside a `FeatureCollection`. Each feature can carry custom properties (metadata) alongside its geometry, making it ideal for describing map markers, shapes, and related data in a portable way.
 
-- Players data
-  - Show player waystone
-  - Show player missing waystones
-  - calculate 'closest known waystone' to a location
-  - Calculate player heat density zones
-  - Show players on the map dynamically
-  - See people exploration level in real time
-  - Crazy idea : live map of all players, and text bubble above them that show what they say (lol)
+Useful links to validate your GeoJSON :
 
-- Market data
-  - Show market data for each waypoints
-  - Best prices for this market [1/5/10 percentile of prices]
-  - Volume of the market calculated in number of orders, total buy order in hexcoins, other methods...
+- [GeoJSON need to be valid Json](https://jsonlint.com/)
+- [You can validate GeoJSON specifically here](https://geojsonlint.com/)
 
-- Empires :
-  - Show empire borders
-  - Show watchtowers
-  - More info about watchtowers (expiration / war...)
-  - Show and search information related to empire (ex : search by empire name, number of tower)
-  - Make capital of empire stand out
-  - Watchtower optimization algorithm
+### Methods for sharing waypoints
 
-- Misc :
-  - Show region names
-  - Show regions grid
-  - Show chunks grid
-  - bitcraft ingame time
-  - traveler quest reset timer
-  - user control of what icons are on top
-  - legends
-  - 3D scene to show resources as they are ingame
+1. **URL Hash** – Append the GeoJSON after `#` in the URL. Spaces and Line Carries should not break this functionality, please open an issue if you find a case where it does.
+2. **GitHub Gist** – Upload the GeoJSON into a [GitHub Gist](https://gist.github.com/) as public, then use the ID as `?gistId=...` parameter
 
-- Thoughs about a navigation algorithm
-  - input starting position or "locate me" from name
-  - input destination
-  - Do you want to use waystones ?
-  - How many energy do you have ?
-  - what do you want to carry ? (% of inventory ?)
-  - Does the user want to move cargo ?
-  - Calculate zones where its better to move around water than deploying a boat
-  - So we need list of deployable from the user
-  - calculate total time
+### Working GeoJSON Example
 
-- Navigation "addon"
-  - Find a way to display an overlaw over bitcraft to show an arrow when the user want to move to a destination
+[You can try this GeoJSON here: https://bitcraftmap.com/?gistId=8ecf9520d96e13908c060c871430ed37](https://bitcraftmap.com/?gistId=8ecf9520d96e13908c060c871430ed37)
 
-## Pass geoJson with the location.hash
+```json
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "popupText": "My custom waypoint",
+                "iconName": "HexCoin3",
+                "iconSize": [128,128],
+                "turnLayerOff": ["ruinedLayer","treesLayer","templesLayer"]
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [15000, 15000]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "popupText": "My custom polygon",
+                "color": "#c24747ff"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [23040, 11520],
+                    [19666, 19666],
+                    [11520, 23040],
+                    [3374, 19666],
+                    [0, 11520],
+                    [3374, 3374],
+                    [11520, 0],
+                    [19666, 3374],
+                    [23040, 11520]
+                ]]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "makeCanvas": 1,
+                "radius": 50,
+                "fillColor": "#3dd53fff",
+                "weight": 5
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [15000, 15000]
+            }
+        }
+    ]
+}
+```
 
-- Possibles attacks : DOS (too many markers) / XSS / Unexpected behavior if malformed string
-- https://www.text-utils.com/remove-extra-spaces/
-- https://www.base64encode.org/
+### What GeoJSON is accepted ?
 
+Any GeoJSON following the RFC linked above and being validated by [geojsonlint](https://geojsonlint.com/) is accepted. If you find any incompatibility, please open an issue. Additionally, some custom properties are accepted to enhance user experience.
 
+### Available properties
 
+| Property | Type | Values | Default | Effect |
+|---|---|---|---|---|
+| `popupText` | string or string[] | Plain text, array of texts | — | Binds a popup to the feature with the given content. Arrays become multi-line (`<br>`). HTML is **escaped**. |
+| `makeCanvas` | boolean | `true` / `false` | `false` | If `true`, draws a `CircleMarker` on canvas instead of a waypoint. This makes it possible to display much more information. |
+| `turnLayerOn` | string or string[] | See **Layer Name Reference** | — | After rendering, **adds** those layers to the map. |
+| `turnLayerOff` | string or string[] | See **Layer Name Reference** | — | After rendering, **removes** those layers from the map. |
+| `iconName` | string | See **Icon Name Reference** | validated to `waypoint` | Icon you can display as your waypoint. See **Icon Name Reference** for list of possible icons |
+| `iconSize` | `[w, h]` | Array of 2 numbers | validated to `[32,32]` | Size of the icon you want to display in pixel weight and width |
+| `flyTo` | `[lat, lng]` | Small Hex Coordinates (`0` to `23040`) | — | If present **with** `zoomTo`, calls `map.flyTo(flyTo, zoomTo)`. |
+| `zoomTo` | number | Leaflet zoom level (`-6` to `6`) | — | Used with `flyTo`. |
+| `noPan` | boolean | `true` / `false` | `false` | If feature has bounds and you didn’t use `flyTo`, the map **fits** bounds unless `noPan` is true. |
+| `radius` | number | Radius in pixels | `1` when `makeCanvas: true` | Circle radius. Only used with `makeCanvas` |
+| `color` | string | Hex Color | `#3388ff` | Stroke color. Used with polygons, lines and `makeCanvas` |
+| `weight` | number | Stroke width in pixels | `3` | Stroke width. Used with polygons, lines and `makeCanvas` |
+| `opacity` | number | `0` to `1` | `1` | Stroke opacity. Used with polygons, lines and `makeCanvas` |
+| `fillColor` | string | Hex Color | `#3388ff` | Fill color. Used with polygons, lines and `makeCanvas` |
+| `fillOpacity` | number | `0` to `1` | `0.2` | Fill opacity. Used with polygons, lines and `makeCanvas` |
 
-## Check later
+### Icon Name Reference (for `iconName`)
 
-- https://leafletjs.com/plugins.html#layer-switching-controls
-- https://github.com/stefanocudini/leaflet-search/tree/master / https://opengeo.tech/maps/leaflet-search/
-- https://worace.works/2022/02/23/kicking-the-tires-flatgeobuf/
-- https://pasq.fr/flatgeobuf-soyons-binaire
-- https://flatgeobuf.org/examples/leaflet/
-- https://github.com/mapbox/geobuf
+The full list of icons available for this properties is available [in this file](https://bitcraft.com/assets/images/manifest.js)
 
+### Layer Name Reference (for `turnLayerOn` / `turnLayerOff`)
 
-## List of possible filters
-- Global filter
-    - Filter by region
-    - Filter by biome
-- Claims
-    - Filter by tier
-    - Filter / Search by name
+You can turn on an off these layers :
 
-- Filter per profession
-    - Foraging
-    - Hunting
-    - Mining
-    - Forestry
-    - Fishing
-
-- Resources
-    - Filter by tier
-
-- Caves
-    - Filter by tier
-    - Filter by size
-
-## Ui design
-- Menu
-    - Colapse
-    - Move around
-    - Pin to current position
-    - Load settings
-    - Save settings
-    - Share settings
-
-- Later
-    - Resource Finder in range [circle or draw a shape]
-
-## Some inspiration
-
-- https://www.newworld-map.com/
-- https://interactive-game-maps.github.io/
-- https://stackoverflow.com/questions/12262163/what-are-leaflet-and-mapbox-and-what-are-their-differences
-- (ablion map) view-source:https://albiononline2d.com/public/js/map.js https://albiononline2d.com/en/map/2202
-
-- https://genshin-impact-map.appsample.com/?map=teyvat
-- https://act.hoyolab.com/ys/app/interactive-map/index.html
-- https://www.npmjs.com/package/@mapbox/geojsonhint
-
-## Generic info
-
-- Tiers
-    - 1:'#A0A0A0'
-    - 2:'#E8B57A'
-    - 3:'#A0D2B2'
-    - 4:'#3B60E4'
-    - 5:'#9C4A93'
-    - 6:'#B03A48'
-    - 7:'#EEDD7A'
-    - 8:'#4CA3A6'
-    - 9:'#3A3A3A'
-    - 10:'#BFD4E0'
-
-- How to get your token
-    - curl -X POST -vvv  https://api.bitcraftonline.com/authentication/request-access-code?email=[mail]
-    - curl -X POST -vvv  "https://api.bitcraftonline.com/authentication/authenticate?email=[mail]&accessCode=[code]"
-
-## Bounding box
-
-- https://gis.stackexchange.com/questions/76113/dynamically-set-zoom-level-based-on-a-bounding-box
-- https://www.google.com/search?sca_esv=9707cd9f776f091f&sxsrf=AE3TifOcCRxiLnqzwKz9qNlkRxzYF-QYNQ:1754167009955&udm=2&fbs=AIIjpHx4nJjfGojPVHhEACUHPiMQ_pbg5bWizQs3A_kIenjtcpTTqBUdyVgzq0c3_k8z34EAuM72an33lMW6RWde9ePJpwNFtZw3UQvFloZy04_0a2t90M1pjb-hlKRN5_Y-eT7ZEcVhb6tlz5ZvzwJfgnPcI9sO9tdtG4H8zxL-DrxbEkQcUjNRbZ70noEbDq9g2_ndCyCt&q=what+is+a+bounding+box+geojson&sa=X&ved=2ahUKEwjj-ISs_eyOAxUjfKQEHU9SBbUQtKgLegQIDxAB&biw=2122&bih=1018&dpr=1.25#vhid=02OhC2ONeqVqQM&vssid=mosaic
-- https://stackoverflow.com/questions/22948096/get-the-bounding-box-of-the-visible-leaflet-map
+``` JS
+treesLayer
+templesLayer
+ruinedLayer
+banksLayer
+marketsLayer
+waystonesLayer
+waypointsLayer
+claimT0Layer
+claimT1Layer
+claimT2Layer
+claimT3Layer
+claimT4Layer
+claimT5Layer
+claimT6Layer
+claimT7Layer
+claimT8Layer
+claimT9Layer
+claimT10Layer
+caveT1Layer
+caveT2Layer
+caveT3Layer
+caveT4Layer
+caveT5Layer
+caveT6Layer
+caveT7Layer
+caveT8Layer
+caveT9Layer
+caveT10Layer
+```
