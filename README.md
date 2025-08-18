@@ -116,7 +116,7 @@ Any GeoJSON following the RFC linked above and being validated by [geojsonlint](
 
 ### Icon Name Reference (for `iconName`)
 
-The full list of icons available for this properties is available [in this file](https://bitcraft.com/assets/images/manifest.js)
+The full list of icons available for this properties is available [in this file](./assets/images/manifest.js)
 
 ### Layer Name Reference (for `turnLayerOn` / `turnLayerOff`)
 
