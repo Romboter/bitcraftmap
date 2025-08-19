@@ -6,8 +6,38 @@ const bitcraftWidth = 23040;
 const bitcraftHeight = 23040;
 const bitcraftHeightWithOcean = 23040 * 1.1547005;
 
+const s = 1.1547005; // horizontal stretch of the *world*; we squish input X by 1/s
+
+const SquishXProjection = {
+    project(latlng) {
+        const x = latlng.lng;  // treat "lng" as your game X
+        const y = latlng.lat;  // treat "lat" as your game Y
+        const X = x;
+        const Y = -y / s ;          // Leaflet's layer point Y goes down; negate to keep Y-up world
+        return new L.Point(X, Y);
+    },
+    unproject(point) {
+        const X = point.x;
+        const Y = point.y;
+        const x = X;
+        const y = -Y * s;
+        return new L.LatLng(y, x);
+    },
+    bounds: L.bounds([-Infinity, -Infinity], [Infinity, Infinity])
+};
+
+// 2) Build a CRS using that projection
+const CRS_SquishX = L.extend({}, L.CRS.Simple, {
+    projection: SquishXProjection,
+    // No extra Transformation: we've baked the scaling/flip into project/unproject
+    transformation: new L.Transformation(1, 0, 1, 0),
+    scale(z) { return Math.pow(2, z); },
+    infinite: false
+});
+
+
 const map = L.map('map', {
-    crs: L.CRS.Simple,
+    crs: CRS_SquishX,
     minZoom: -6,
     maxZoom: 6,
     zoomSnap: 0.1,
