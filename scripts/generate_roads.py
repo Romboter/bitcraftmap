@@ -281,7 +281,7 @@ def main():
     }
     fc = {"type": "FeatureCollection", "features": [feature]}
     with open(args.output, "w", encoding="utf-8") as f:
-        json.dump(fc, f, ensure_ascii=False)
+        json.dump(fc, f, ensure_ascii=False,separators=(',', ':'))
     print(f"Wrote {len(mpoly.geoms) if hasattr(mpoly,'geoms') else 1} polygon(s) → {args.output}")
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 'use strict';
+const s = 2 / Math.sqrt(3);
 
 const imageWidth = 2400;
 const imageHeight = 2400;
 const bitcraftWidth = 23040;  
 const bitcraftHeight = 23040;
-const bitcraftHeightWithOcean = 23040 * 1.1547005;
+const bitcraftHeightWithOcean = 23040 * s;
 
-const s = 1.1547005; // horizontal stretch of the *world*; we squish input X by 1/s
 
 const SquishXProjection = {
     project(latlng) {
@@ -143,64 +143,97 @@ const caveT9Layer = L.layerGroup();
 const caveT10Layer = L.layerGroup();
 
 const caveLayers = [
-caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
-caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
+    caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
+    caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
 ];
 
 const allCaves = L.layerGroup(caveLayers);
 
+const region1Roads = L.layerGroup();
+const region2Roads = L.layerGroup();
+const region3Roads = L.layerGroup();
+const region4Roads = L.layerGroup();
+const region5Roads = L.layerGroup();
+const region6Roads = L.layerGroup();
+const region7Roads = L.layerGroup();
+const region8Roads = L.layerGroup();
+const region9Roads = L.layerGroup();
+
+const roadsLayers = [
+    region1Roads,region2Roads,region3Roads,region4Roads,region5Roads,
+    region6Roads,region7Roads,region8Roads,region9Roads,
+];
+
+const allRoads = L.layerGroup(roadsLayers);
+
 const genericToggle = {
-"Wonders": treesLayer,
-"Temples": templesLayer,
-"Ruined Cities": ruinedLayer,
-"Banks": banksLayer,
-"Markets": marketsLayer,
-"Waystones": waystonesLayer,
-"Grids": gridsLayer,
-"Waypoints": waypointsLayer,
+    "Wonders": treesLayer,
+    "Temples": templesLayer,
+    "Ruined Cities": ruinedLayer,
+    "Banks": banksLayer,
+    "Markets": marketsLayer,
+    "Waystones": waystonesLayer,
+    "Grids": gridsLayer,
+    "Waypoints": waypointsLayer,
 };
 
 const claimsToggle = {
-"Claims": allClaims
+    "Claims": allClaims
 };
 
 const claimsTierToggle = {
-"Claims T1": claimT1Layer,
-"Claims T2": claimT2Layer,
-"Claims T3": claimT3Layer,
-"Claims T4": claimT4Layer,
-"Claims T5": claimT5Layer,
-"Claims T6": claimT6Layer,
-"Claims T7": claimT7Layer,
-"Claims T8": claimT8Layer,
-"Claims T9": claimT9Layer,
-"Claims T10": claimT10Layer
+    "Claims T1": claimT1Layer,
+    "Claims T2": claimT2Layer,
+    "Claims T3": claimT3Layer,
+    "Claims T4": claimT4Layer,
+    "Claims T5": claimT5Layer,
+    "Claims T6": claimT6Layer,
+    "Claims T7": claimT7Layer,
+    "Claims T8": claimT8Layer,
+    "Claims T9": claimT9Layer,
+    "Claims T10": claimT10Layer
 };
 
 const cavesToggle = {
-"Caves": allCaves
+    "Caves": allCaves
 };
 
 const cavesTierToggle = {
-"Caves T1": caveT1Layer,
-"Caves T2": caveT2Layer,
-"Caves T3": caveT3Layer,
-"Caves T4": caveT4Layer,
-"Caves T5": caveT5Layer,
-"Caves T6": caveT6Layer,
-"Caves T7": caveT7Layer,
-"Caves T8": caveT8Layer,
-"Caves T9": caveT9Layer,
-"Caves T10": caveT10Layer
+    "Caves T1": caveT1Layer,
+    "Caves T2": caveT2Layer,
+    "Caves T3": caveT3Layer,
+    "Caves T4": caveT4Layer,
+    "Caves T5": caveT5Layer,
+    "Caves T6": caveT6Layer,
+    "Caves T7": caveT7Layer,
+    "Caves T8": caveT8Layer,
+    "Caves T9": caveT9Layer,
+    "Caves T10": caveT10Layer
+};
+
+const regionRoadsToggle = {
+    "R1 roads": region1Roads,
+    "R2 roads": region2Roads,
+    "R3 roads": region3Roads,
+    "R4 roads": region4Roads,
+    "R5 roads": region5Roads,
+    "R6 roads": region6Roads,
+    "R7 roads": region7Roads,
+    "R8 roads": region8Roads,
+    "R9 roads": region9Roads
 };
 
 const allLayers = {
-treesLayer, templesLayer, ruinedLayer, banksLayer, marketsLayer, waystonesLayer, waypointsLayer,
-claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
-claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
-caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
-caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer
+    treesLayer, templesLayer, ruinedLayer, banksLayer, marketsLayer, waystonesLayer, waypointsLayer,
+    claimT0Layer, claimT1Layer, claimT2Layer, claimT3Layer, claimT4Layer, claimT5Layer,
+    claimT6Layer, claimT7Layer, claimT8Layer, claimT9Layer, claimT10Layer,
+    caveT1Layer, caveT2Layer, caveT3Layer, caveT4Layer, caveT5Layer,
+    caveT6Layer, caveT7Layer, caveT8Layer, caveT9Layer, caveT10Layer,
+    region1Roads,region2Roads,region3Roads,region4Roads,region5Roads,
+    region6Roads,region7Roads,region8Roads,region9Roads,
 };
+
+
 
 // This is leaflet.search plugin configuration
 // This plugin need a "title" parameter in each marker to find stuff
@@ -412,12 +445,13 @@ async function loadGeoJsonFromGist() {
     map.addLayer(waypointsLayer);
 };
 
-async function loadGeoJsonFromFile(fileUrl) {
+async function loadGeoJsonFromFile(fileUrl, layer) {
     const file = await fetch(fileUrl);
     const content = await file.text()
     const geoJson = validateGeoJson(content);
-    paintGeoJson(geoJson, gridsLayer);
+    paintGeoJson(geoJson, layer);
 };
+
 
 function paintGeoJson(geoJson, layer) {
 L.geoJSON(geoJson, {
@@ -518,6 +552,7 @@ L.control.layers(null, claimsToggle, { collapsed: false }).addTo(map);
 L.control.layers(null, claimsTierToggle, { collapsed: false }).addTo(map);
 L.control.layers(null, cavesToggle, { collapsed: false }).addTo(map);
 L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
+L.control.layers(null, regionRoadsToggle, { collapsed: false }).addTo(map);
 
 function escapeHTML(string) {
     return string
@@ -534,7 +569,6 @@ function validateGeoJson(untrustedString) {
         throw new Error('untrustedString be a string');
     }
 
-    console.log(untrustedString)
     let decodedString;
     try { decodedString = decodeURIComponent(untrustedString); }
     catch { throw new Error('Bad URI encoding'); }
@@ -609,10 +643,21 @@ function validateGeoJson(untrustedString) {
 loadTreesGeoJson();
 loadTemplesGeoJson();
 loadRuinedGeoJson();
-loadCavesGeoJson();
-loadClaimsGeoJson();
+loadCavesGeoJson(); // will lazy load this
+loadClaimsGeoJson(); // will lazy load this
 
-// Load from gist / load from hash / load from file
+// Load from gist / load from hash
 loadGeoJsonFromGist();
 loadGeoJsonFromHash();
-loadGeoJsonFromFile('assets/markers/grids.geojson');
+
+// Load only when the user is requesting it
+gridsLayer.once('add', () => loadGeoJsonFromFile('assets/markers/grids.geojson', gridsLayer));
+region1Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r1_small.geojson', region1Roads));
+region2Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r2_small.geojson', region2Roads));
+region3Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r3_small.geojson', region3Roads));
+region4Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r4_small.geojson', region4Roads));
+region5Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r5_small.geojson', region5Roads));
+region6Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r6_small.geojson', region6Roads));
+region7Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r7_small.geojson', region7Roads));
+region8Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r8_small.geojson', region8Roads));
+region9Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r9_small.geojson', region9Roads));
