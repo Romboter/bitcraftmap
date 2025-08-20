@@ -475,7 +475,12 @@ L.geoJSON(geoJson, {
     map.createPane('markerOnTop');
     map.getPane('markerOnTop').style.zIndex = 999;
 
-    const waypointIcon = createIcon('waypoint');
+    let waypointIcon;
+    if (feature.properties?.iconName || feature.properties?.iconSize) {
+        waypointIcon = createIcon(feature.properties.iconName, feature.properties.iconSize);
+    } else {
+        waypointIcon = createIcon('waypoint');
+    }
 
     return L.marker(
         latlng,

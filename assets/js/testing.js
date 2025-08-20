@@ -56,7 +56,7 @@ const map = L.map('map', {
 const mapBounds = [[0, 0], [bitcraftHeight, bitcraftWidth]];
 const mapBoundsWithOcean = [[0, 0], [bitcraftHeightWithOcean, bitcraftWidth]];
 
-L.imageOverlay('assets/maps/TerrainMap.hex.png', mapBoundsWithOcean).addTo(map);
+L.imageOverlay('assets/maps/map.png', mapBoundsWithOcean).addTo(map);
 map.fitBounds(mapBounds);
 
 
