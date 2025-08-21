@@ -1,8 +1,6 @@
 'use strict';
 const s = 2 / Math.sqrt(3);
 
-const imageWidth = 2400;
-const imageHeight = 2400;
 const bitcraftWidth = 23040;  
 const bitcraftHeight = 23040;
 const bitcraftHeightWithOcean = 23040 * s;

@@ -1,8 +1,6 @@
 'use strict';
 const s = 2 / Math.sqrt(3);
 
-const imageWidth = 2400;
-const imageHeight = 2400;
 const bitcraftWidth = 23040;  
 const bitcraftHeight = 23040;
 const bitcraftHeightWithOcean = 23040 * s;
@@ -56,7 +54,7 @@ const map = L.map('map', {
 const mapBounds = [[0, 0], [bitcraftHeight, bitcraftWidth]];
 const mapBoundsWithOcean = [[0, 0], [bitcraftHeightWithOcean, bitcraftWidth]];
 
-L.imageOverlay('https://pub-de27d67c8a4c4c2fbc5a551521ba7de3.r2.dev/TerrainMap.hex.png', mapBoundsWithOcean).addTo(map);
+L.imageOverlay('assets/maps/map.png', mapBoundsWithOcean).addTo(map);
 map.fitBounds(mapBounds);
 
 
@@ -475,7 +473,12 @@ L.geoJSON(geoJson, {
     map.createPane('markerOnTop');
     map.getPane('markerOnTop').style.zIndex = 999;
 
-    const waypointIcon = createIcon('waypoint');
+    let waypointIcon;
+    if (feature.properties?.iconName || feature.properties?.iconSize) {
+        waypointIcon = createIcon(feature.properties.iconName, feature.properties.iconSize);
+    } else {
+        waypointIcon = createIcon('waypoint');
+    }
 
     return L.marker(
         latlng,
