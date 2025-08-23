@@ -172,9 +172,6 @@ https://bitcraftmap.com
     - 9:'#3A3A3A'
     - 10:'#BFD4E0'
 
-- How to get your token
-    - curl -X POST -vvv  https://api.bitcraftonline.com/authentication/request-access-code?email=[mail]
-    - curl -X POST -vvv  "https://api.bitcraftonline.com/authentication/authenticate?email=[mail]&accessCode=[code]"
 
 ## Bounding box
 
