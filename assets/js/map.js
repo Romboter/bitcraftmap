@@ -443,6 +443,16 @@ async function loadGeoJsonFromGist() {
     map.addLayer(waypointsLayer);
 };
 
+async function loadGeoJsonFromBackend() {
+    const resourceId = new URLSearchParams(window.location.search).get('resourceId');
+    if(!resourceId) return;
+    if(!/^[0-9]+$/.test(resourceId)) return;
+    const response = await fetch('https://api.bitcraftmap.com/resource/' + resourceId)
+    const geoJson = await response.json();
+    paintGeoJson(geoJson, waypointsLayer);
+    map.addLayer(waypointsLayer);
+};
+
 async function loadGeoJsonFromFile(fileUrl, layer) {
     const file = await fetch(fileUrl);
     const content = await file.text()
@@ -652,6 +662,7 @@ loadClaimsGeoJson(); // will lazy load this
 // Load from gist / load from hash
 loadGeoJsonFromGist();
 loadGeoJsonFromHash();
+loadGeoJsonFromBackend();
 
 // Load only when the user is requesting it
 gridsLayer.once('add', () => loadGeoJsonFromFile('assets/markers/grids.geojson', gridsLayer));
@@ -664,3 +675,4 @@ region6Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r6_smal
 region7Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r7_small.geojson', region7Roads));
 region8Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r8_small.geojson', region8Roads));
 region9Roads.once('add', () => loadGeoJsonFromFile('assets/markers/roads_r9_small.geojson', region9Roads));
+
