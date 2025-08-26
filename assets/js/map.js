@@ -438,6 +438,16 @@ async function loadGeoJsonFromBackend() {
     map.addLayer(waypointsLayer);
 };
 
+async function loadEnemyGeoJsonFromBackend() {
+    const resourceId = new URLSearchParams(window.location.search).get('enemyId');
+    if(!resourceId) return;
+    if(!/^[0-9]+$/.test(resourceId)) return;
+    const response = await fetch('https://api.bitcraftmap.com/enemy/' + resourceId)
+    const geoJson = await response.json();
+    paintGeoJson(geoJson, waypointsLayer);
+    map.addLayer(waypointsLayer);
+};
+
 async function loadGeoJsonFromFile(fileUrl, layer) {
     const file = await fetch(fileUrl);
     const content = await file.text()
@@ -702,6 +712,7 @@ loadClaimsGeoJson(); // will lazy load this
 loadGeoJsonFromGist();
 loadGeoJsonFromHash();
 loadGeoJsonFromBackend();
+loadEnemyGeoJsonFromBackend();
 
 // Load only when the user is requesting it
 gridsLayer.once('add', () => loadGeoJsonFromFile('assets/markers/grids.geojson', gridsLayer));
