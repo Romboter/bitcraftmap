@@ -173,13 +173,7 @@ const genericToggle = {
     "Waystones": waystonesLayer,
     "Grids": gridsLayer,
     "Waypoints": waypointsLayer,
-};
-
-const claimsToggle = {
-    "Claims": allClaims
-};
-
-const claimsTierToggle = {
+    "Claims": allClaims,
     "Claims T1": claimT1Layer,
     "Claims T2": claimT2Layer,
     "Claims T3": claimT3Layer,
@@ -189,14 +183,8 @@ const claimsTierToggle = {
     "Claims T7": claimT7Layer,
     "Claims T8": claimT8Layer,
     "Claims T9": claimT9Layer,
-    "Claims T10": claimT10Layer
-};
-
-const cavesToggle = {
-    "Caves": allCaves
-};
-
-const cavesTierToggle = {
+    "Claims T10": claimT10Layer,
+    "Caves": allCaves,
     "Caves T1": caveT1Layer,
     "Caves T2": caveT2Layer,
     "Caves T3": caveT3Layer,
@@ -206,10 +194,7 @@ const cavesTierToggle = {
     "Caves T7": caveT7Layer,
     "Caves T8": caveT8Layer,
     "Caves T9": caveT9Layer,
-    "Caves T10": caveT10Layer
-};
-
-const regionRoadsToggle = {
+    "Caves T10": caveT10Layer,
     "R1 roads": region1Roads,
     "R2 roads": region2Roads,
     "R3 roads": region3Roads,
@@ -560,12 +545,66 @@ templesLayer.addTo(map);
 ruinedLayer.addTo(map);
 searchControl.addTo(map);
 
-L.control.layers(null, genericToggle, { collapsed: false }).addTo(map);
-L.control.layers(null, claimsToggle, { collapsed: false }).addTo(map);
-L.control.layers(null, claimsTierToggle, { collapsed: false }).addTo(map);
-L.control.layers(null, cavesToggle, { collapsed: false }).addTo(map);
-L.control.layers(null, cavesTierToggle, { collapsed: false }).addTo(map);
-L.control.layers(null, regionRoadsToggle, { collapsed: false }).addTo(map);
+const controlLayer = L.control.layers(null, genericToggle, { collapsed: false }).addTo(map);
+
+function groupLayersControl(control, groups) {
+    const root = control._overlaysList;
+    const labels = [...root.querySelectorAll('label')];
+    const byName = Object.fromEntries(labels.map(l => [l.textContent.trim(), l]));
+    root.innerHTML = '';
+
+    for (const [title, names] of Object.entries(groups)) {
+        const section = L.DomUtil.create('details', 'lc-section', root);
+        const summary = L.DomUtil.create('summary', 'lc-summary', section);
+
+        // Colapse all but poi
+        if (!['Claims', 'Caves', 'Roads'].includes(title)) {
+            section.open = true;
+        }
+
+        // master checkbox
+        const master = L.DomUtil.create('input', '', summary);
+        master.type = 'checkbox';
+        summary.appendChild(document.createTextNode(title));
+
+        const list = L.DomUtil.create('div', 'lc-list', section);
+        const children = names.map(n => byName[n]).filter(Boolean);
+        children.forEach(el => list.appendChild(el));
+
+        // Select and deselect checkboxes when you click on the master checkbox
+        master.addEventListener('change', () => {
+            const anyChecked = children.some(el => el.querySelector('input').checked);
+            if (anyChecked) {
+                // if any child is checked → click all checked ones to deselect
+                children.forEach(el => {
+                    const cb = el.querySelector('input[type=checkbox]');
+                    if (cb.checked) el.click();
+                });
+            } else {
+                // if none checked → click all to select
+                children.forEach(el => el.click());
+            }
+        });
+
+        // keep master synced with children
+        children.forEach(el => {
+            const cb = el.querySelector('input[type=checkbox]');
+            cb.addEventListener('change', () => {
+                const all = children.every(c => c.querySelector('input').checked);
+                const none = children.every(c => !c.querySelector('input').checked);
+                master.indeterminate = !(all || none);
+                master.checked = all;
+            });
+        });
+    }
+}
+
+groupLayersControl(controlLayer, {
+    'Points of Interest': ['Wonders','Temples','Ruined Cities','Banks','Markets','Waystones','Grids','Waypoints'],
+    'Claims': ['Claims T1','Claims T2','Claims T3','Claims T4','Claims T5','Claims T6','Claims T7','Claims T8','Claims T9','Claims T10'],
+    'Caves':  ['Caves T1','Caves T2','Caves T3','Caves T4','Caves T5','Caves T6','Caves T7','Caves T8','Caves T9','Caves T10'],
+    'Roads':  ['R1 roads','R2 roads','R3 roads','R4 roads','R5 roads','R6 roads','R7 roads','R8 roads','R9 roads']
+});
 
 function escapeHTML(string) {
     return string

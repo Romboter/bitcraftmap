@@ -25,3 +25,23 @@ position: absolute;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
+
+.leaflet-control-layers .lc-section {
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+}
+
+.leaflet-control-layers .lc-summary {
+    color: #2a3145;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    list-style: none;
+}
+
+.leaflet-control-layers .lc-list label {
+    display: flex;
+    align-items: center;
+}
