@@ -1,0 +1,15 @@
+{
+    "workbench.colorCustomizations": {
+        "editorBracketHighlight.foreground1": "#FAC29A",
+        "editorBracketHighlight.foreground2": "#B877DB",
+        "editorBracketHighlight.foreground3": "#25B2BC",
+        "activityBar.background": "#5E0D0F",
+        "titleBar.activeBackground": "#831214",
+        "titleBar.activeForeground": "#FEFBFB",
+        "deno.enable": true,
+        "deno.enablePaths": ["./assets/js/", "./scripts/"],
+        "deno.lint": true,
+        "deno.unstable": false,
+        "typescript.suggest.autoImports": false
+    }
+}

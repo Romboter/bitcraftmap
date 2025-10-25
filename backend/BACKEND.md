@@ -1,5 +1,0 @@
-# Architecture
-
-- Docker
-- Caddy
-- Krakend

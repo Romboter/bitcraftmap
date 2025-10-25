@@ -1,7 +1,6 @@
 matplotlib
 numpy
 requests
-json
-opencv
+opencv-python
 pillow
 pandas
